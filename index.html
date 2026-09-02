@@ -1109,6 +1109,74 @@
             }
         }
 
+
+        /* v10: remove the extra bottom section under the nav */
+        @media (max-width: 768px) {
+            html,
+            body {
+                background-color: #08112b !important;
+            }
+
+            body::after {
+                content: none !important;
+                display: none !important;
+                height: 0 !important;
+            }
+
+            #mobile-nav {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 64px !important;
+                min-height: 64px !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                background: #08112b !important;
+                border-top: none !important;
+                align-items: stretch !important;
+                overflow: visible !important;
+                z-index: 50 !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 64px !important;
+                min-height: 64px !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding-bottom: 0 !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                width: 65px !important;
+                height: 65px !important;
+                min-width: 65px !important;
+                min-height: 65px !important;
+                transform: translateY(-20px) !important;
+                background: #08112b !important;
+                color: #ffffff !important;
+                border: 4px solid #ffffff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px !important;
+            }
+
+            #view-container {
+                padding-bottom: 80px !important;
+            }
+        }
+
     </style>
 </head>
 <body>
