@@ -1276,6 +1276,112 @@
             }
         }
 
+
+        /* v12: force exact mobile positions */
+        @media (max-width: 768px) {
+            html, body {
+                background: #08112b !important;
+                background-color: #08112b !important;
+            }
+
+            body::after {
+                content: none !important;
+                display: none !important;
+            }
+
+            #mobile-nav {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 68px !important;
+                min-height: 68px !important;
+                padding: 0 !important;
+                background: #08112b !important;
+                border: 0 !important;
+                overflow: visible !important;
+                z-index: 60 !important;
+                display: flex !important;
+                align-items: stretch !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 68px !important;
+                min-height: 68px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0 !important;
+                transform: none !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                position: relative !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                position: absolute !important;
+                left: 50% !important;
+                top: 0 !important;
+                width: 76px !important;
+                height: 76px !important;
+                min-width: 76px !important;
+                min-height: 76px !important;
+                margin: 0 !important;
+                transform: translate(-50%, -50%) !important;
+                background: #08112b !important;
+                color: #fff !important;
+                border: 4px solid #fff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 12px 28px rgba(0,0,0,.24) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                z-index: 2 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 38px !important;
+                line-height: 1 !important;
+            }
+
+            #view-container {
+                padding-bottom: 92px !important;
+            }
+
+            /* Dialog begins clearly below Dynamic Island / status area */
+            dialog[open] {
+                position: fixed !important;
+                top: calc(max(env(safe-area-inset-top, 0px), 54px) + 32px) !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 !important;
+                border-radius: 22px 22px 0 0 !important;
+                overflow: hidden !important;
+            }
+
+            #newTradeDialog[open] {
+                top: calc(max(env(safe-area-inset-top, 0px), 54px) + 32px) !important;
+            }
+
+            .dialog-content {
+                min-height: 0 !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+
+            .dialog-footer {
+                padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)) !important;
+            }
+        }
+
     </style>
 </head>
 <body>
