@@ -974,6 +974,141 @@
             }
         }
 
+
+        /* v8: lower the bar, keep + size, and make bottom filler the same color as the nav */
+        @media (max-width: 768px) {
+            :root {
+                --mobile-nav-content-h: 54px !important;
+                --mobile-nav-safe-b: max(env(safe-area-inset-bottom, 0px), 14px) !important;
+            }
+
+            html,
+            body {
+                background-color: #08112b !important;
+            }
+
+            #mobile-nav {
+                height: calc(54px + max(env(safe-area-inset-bottom, 0px), 14px)) !important;
+                min-height: calc(54px + max(env(safe-area-inset-bottom, 0px), 14px)) !important;
+                padding-top: 0 !important;
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 14px) !important;
+                background: #08112b !important;
+                align-items: stretch !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 54px !important;
+                min-height: 54px !important;
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                width: 65px !important;
+                height: 65px !important;
+                min-width: 65px !important;
+                min-height: 65px !important;
+                transform: translateY(-24px) !important;
+                background: #08112b !important;
+                color: #ffffff !important;
+                border: 4px solid #ffffff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px !important;
+            }
+
+            body::after {
+                height: calc(54px + max(env(safe-area-inset-bottom, 0px), 14px)) !important;
+                background: #08112b !important;
+            }
+
+            #view-container {
+                padding-bottom: calc(54px + max(env(safe-area-inset-bottom, 0px), 14px) + 16px) !important;
+            }
+        }
+
+
+        /* v9: put the navigation bar flush to the very bottom */
+        @media (max-width: 768px) {
+            :root {
+                --mobile-nav-content-h: 64px !important;
+                --mobile-nav-safe-b: env(safe-area-inset-bottom, 0px) !important;
+            }
+
+            html,
+            body {
+                background-color: #08112b !important;
+            }
+
+            #mobile-nav {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+                min-height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+                padding-top: 0 !important;
+                padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+                background: #08112b !important;
+                align-items: stretch !important;
+                overflow: visible !important;
+                z-index: 50 !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 64px !important;
+                min-height: 64px !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding-bottom: 0 !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                width: 65px !important;
+                height: 65px !important;
+                min-width: 65px !important;
+                min-height: 65px !important;
+                transform: translateY(-22px) !important;
+                background: #08112b !important;
+                color: #ffffff !important;
+                border: 4px solid #ffffff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px !important;
+            }
+
+            body::after {
+                height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+                background: #08112b !important;
+            }
+
+            #view-container {
+                padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 16px) !important;
+            }
+        }
+
     </style>
 </head>
 <body>
