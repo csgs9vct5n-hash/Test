@@ -1,0 +1,3486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="權力翻身｜個人選擇權交易決策終端">
+    <meta name="theme-color" content="#0a0e1a" id="theme-color-meta">
+    <title>權力翻身｜Trading Dashboard</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=block" rel="stylesheet" />
+
+    <style>
+        /* =========================================
+           1. Design Tokens & Core Variables
+        ========================================= */
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+
+            --accent: #d4a548;
+            --accent-bg: #fdf6e8;
+
+            --positive: #059669;
+            --positive-bg: #ecfdf5;
+            --negative: #dc2626;
+            --negative-bg: #fef2f2;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --info: #0284c7;
+            --info-bg: #f0f9ff;
+
+            --sidebar-bg: #0a0e1a;
+            --sidebar-text: #94a3b8;
+            --sidebar-active-bg: #1e293b;
+            --sidebar-active-text: #ffffff;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+
+            --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', Roboto, system-ui, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', monospace;
+
+            --space-4: 4px; --space-12: 12px; --space-16: 16px;
+            --space-20: 20px; --space-24: 24px; --space-32: 32px;
+
+            --control-h: 44px;
+            --control-radius: 10px;
+            --control-font: 14px;
+            --page-gutter: clamp(14px, 2vw, 28px);
+            --section-gap: clamp(16px, 2vw, 24px);
+            --card-gap: clamp(12px, 1.5vw, 20px);
+            --text-xs: 12px;
+            --text-sm: 13px;
+            --text-md: 14px;
+
+            --mobile-nav-content-h: 50px;
+            --mobile-nav-safe-b: max(env(safe-area-inset-bottom, 0px), 2px);
+        }
+
+        html[data-theme="dark"] {
+            --bg: #09090b;
+            --surface: #18181b;
+            --surface-elevated: #27272a;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+
+            --accent: #d4a548;
+            --accent-bg: #3f331b;
+
+            --positive: #10b981;
+            --positive-bg: #064e3b;
+            --negative: #ef4444;
+            --negative-bg: #7f1d1d;
+            --info: #38bdf8;
+            --info-bg: #0c4a6e;
+            --warning: #f59e0b;
+            --warning-bg: #78350f;
+
+            --sidebar-bg: #000000;
+            --sidebar-active-bg: #27272a;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        /* =========================================
+           2. Global Reset & Base
+        ========================================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --app-height: 100dvh;
+        }
+
+        html {
+            color-scheme: light dark; 
+            -webkit-text-size-adjust: 100%; 
+            scroll-behavior: smooth;
+            background-color: var(--bg); 
+            overscroll-behavior: none; 
+            overflow: hidden;
+            width: 100%;
+            height: var(--app-height);
+            min-height: var(--app-height);
+        }
+
+        body {
+            font-family: var(--font-sans); 
+            background-color: var(--bg); 
+            color: var(--text-primary);
+            font-size: var(--text-md); 
+            line-height: 1.55; 
+            -webkit-font-smoothing: antialiased; 
+            overflow: hidden;
+            display: flex; 
+            flex-direction: column; 
+            min-width: 0; 
+            overscroll-behavior: none; 
+            width: 100%;
+            height: var(--app-height);
+            min-height: var(--app-height);
+            touch-action: pan-y;
+        }
+
+        button, input, select, textarea { font-family: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .material-symbols-rounded {
+            vertical-align: middle; font-size: 20px;
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1em; height: 1em; overflow: hidden; white-space: nowrap;
+            flex-shrink: 0; line-height: 1;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* =========================================
+           3. App Shell (Sidebar / Header / Buttons)
+        ========================================= */
+        #app-shell { display: flex; flex: 1; width: 100%; overflow: hidden; min-height: 0; }
+
+        /* Sidebar */
+        #sidebar {
+            width: calc(240px + env(safe-area-inset-left, 0px));
+            padding-left: env(safe-area-inset-left, 0px);
+            background: var(--sidebar-bg); color: var(--sidebar-text);
+            display: flex; flex-direction: column; border-right: 1px solid var(--border);
+            z-index: 40; transition: width 0.2s ease; flex-shrink: 0; overflow-x: hidden;
+        }
+        .brand { padding: calc(var(--space-24) + max(env(safe-area-inset-top, 0px), 20px)) var(--space-20) var(--space-24); display: flex; align-items: center; gap: 12px; }
+        .brand-icon { color: var(--accent); font-size: 28px; }
+        .brand-title { font-size: 16px; font-weight: 800; color: #fff; line-height: 1.2; letter-spacing: 0.5px; }
+        .brand-subtitle { font-size: 11px; color: var(--sidebar-text); }
+
+        .nav-menu { flex: 1; padding: 0 var(--space-12); display: flex; flex-direction: column; gap: var(--space-4); overflow-y: auto; overscroll-behavior-y: contain; }
+        .nav-item {
+            display: flex; align-items: center; gap: var(--space-12); padding: var(--space-12) var(--space-16);
+            border-radius: var(--radius-md); font-size: 14px; font-weight: 600; color: var(--sidebar-text);
+            transition: all 0.2s ease; min-height: 48px; overflow: hidden; white-space: nowrap;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-text); }
+        .nav-item.active .material-symbols-rounded { color: var(--accent); font-variation-settings: 'FILL' 1; }
+
+        .sidebar-footer { padding: var(--space-16); border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
+
+        /* =========================================
+           登入畫面 (Login Screen)
+        ========================================= */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at 50% 0%, #141a2e 0%, #0a0e1a 60%);
+            padding: 24px;
+        }
+        .login-card {
+            width: 100%; max-width: 380px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-modal);
+        }
+        .login-brand { text-align: center; margin-bottom: 32px; }
+        .login-brand-icon { font-size: 44px; color: var(--accent); }
+        .login-brand-title { font-size: 22px; font-weight: 800; color: #fff; margin-top: 10px; letter-spacing: 0.5px; }
+        .login-brand-subtitle { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+        .login-label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+        .login-input {
+            width: 100%; height: var(--control-h); padding: 0 16px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+            border-radius: var(--control-radius); color: #fff; font-size: 15px; letter-spacing: 2px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .login-input::placeholder { color: #64748b; letter-spacing: normal; }
+        .login-input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.09); }
+        .login-error {
+            display: none; color: #f87171; font-size: 12.5px; margin: 10px 2px 0; line-height: 1.5;
+        }
+        .login-submit-btn {
+            width: 100%; height: var(--control-h); margin-top: 20px;
+            background: var(--accent); color: #1a1200; font-weight: 700; font-size: 15px;
+            border-radius: var(--control-radius); display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: filter 0.2s, transform 0.1s;
+        }
+        .login-submit-btn:hover { filter: brightness(1.08); }
+        .login-submit-btn:active { transform: scale(0.98); }
+        .login-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        .login-hint { text-align: center; font-size: 11.5px; color: #64748b; margin-top: 22px; line-height: 1.6; }
+        .login-spin { display: inline-block; animation: login-spin 1s linear infinite; }
+        @keyframes login-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .sync-status { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: var(--radius-sm); transition: background 0.2s; }
+        .sync-status:hover { background: rgba(255,255,255,0.05); }
+        .sync-indicator { width: 8px; height: 8px; border-radius: 50%; background: var(--positive); }
+        .sync-indicator.offline { background: var(--negative); }
+        .sync-indicator.syncing { background: var(--warning); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* Main Area */
+        #main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; background: var(--bg); position: relative; }
+
+        /* Header */
+        #header {
+            height: calc(64px + max(env(safe-area-inset-top, 0px), 20px));
+            padding-top: max(env(safe-area-inset-top, 0px), 20px);
+            border-bottom: 1px solid var(--border); 
+            background: var(--surface);
+            display: flex; align-items: center; justify-content: space-between; 
+            padding-left: max(var(--page-gutter), env(safe-area-inset-left, 0px));
+            padding-right: max(var(--page-gutter), env(safe-area-inset-right, 0px));
+            z-index: 30; flex-shrink: 0;
+        }
+        .header-title { font-size: clamp(17px, 1.3vw, 20px); font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; line-height: 1.2; letter-spacing: -0.01em; }
+        .header-actions { display: flex; align-items: center; gap: var(--space-12); }
+
+        /* Buttons & Controls */
+        .btn, .btn-icon, .form-control, .search-input, .mobile-sort { min-height: var(--control-h); }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            height: var(--control-h); padding: 0 15px; border-radius: var(--control-radius);
+            font-size: var(--control-font); font-weight: 600; line-height: 1;
+            transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        .btn-primary { background: var(--text-primary); color: var(--surface); }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--surface-elevated); border-color: var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { background: var(--bg); border-color: var(--border-hover); }
+        .btn-danger { background: var(--negative-bg); color: var(--negative); }
+        .btn-danger:hover { background: var(--negative); color: #fff; }
+        .btn-ghost { background: transparent; color: var(--text-secondary); }
+        .btn-ghost:hover { background: var(--border); color: var(--text-primary); }
+        .btn-icon {
+            width: var(--control-h); height: var(--control-h); min-width: var(--control-h);
+            padding: 0; border-radius: var(--control-radius); display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary);
+        }
+        .btn-icon:hover { background: var(--border); color: var(--text-primary); }
+
+        /* View Container */
+        #view-container { 
+            flex: 1; min-height: 0; 
+            overflow-y: auto; overflow-x: hidden; 
+            padding: var(--page-gutter); 
+            scroll-behavior: smooth; 
+            overscroll-behavior-y: contain; 
+            overscroll-behavior-x: none;
+            -webkit-overflow-scrolling: touch; 
+            touch-action: pan-y;
+        }
+        .view-section { display: none; width: 100%; max-width: 1440px; margin: 0 auto; animation: fadeIn 0.3s ease-out; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Bottom Navigation (Mobile & Tablet) */
+        #mobile-nav {
+            display: none;
+            height: calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b));
+            background: #0f172a;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            justify-content: space-around;
+            align-items: stretch;
+            padding-top: 2px;
+            padding-bottom: var(--mobile-nav-safe-b);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
+            z-index: 50;
+            flex-shrink: 0;
+            position: relative;
+            overflow: visible;
+        }
+
+        .mobile-nav-item {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #64748b; font-size: 10px; font-weight: 600; gap: 4px; transition: color 0.2s;
+        }
+        .mobile-nav-item.active { color: var(--accent); }
+        .mobile-nav-item .material-symbols-rounded { font-size: 24px; }
+        .mobile-nav-fab {
+            width: 48px; height: 48px; background: var(--text-primary); color: var(--surface);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transform: translateY(-20px); box-shadow: var(--shadow-md); border: 4px solid var(--bg);
+        }
+        .mobile-nav-item-fab { overflow: visible; }
+
+        .mobile-only-flex { display: none; }
+        .mobile-brand { display: none; }
+        .mobile-setting-btn { display: none; }
+        .header-btn-hidden { display: none !important; }
+        @media (max-width: 768px) {
+            .mobile-setting-btn { display: flex; }
+        }
+
+        /* =========================================
+           4. Dashboard Components
+        ========================================= */
+        .grid-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--card-gap); margin-bottom: var(--section-gap); }
+        .kpi-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            min-width: 0; min-height: 100px; padding: 12px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 8px; text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        
+        .kpi-label, .dash-card-title { 
+            min-height: 22px; font-size: 13px; font-weight: 600; color: var(--text-muted); 
+            line-height: 1.35; display: flex; align-items: center; justify-content: center; gap: 6px; letter-spacing: 0.5px; 
+        }
+        .kpi-label .material-symbols-rounded, .dash-card-title .material-symbols-rounded { 
+            font-size: 18px; color: var(--text-muted); opacity: 0.8; 
+        }
+        .kpi-value { font-size: clamp(21px, 2vw, 32px); font-weight: 700; color: var(--text-primary); line-height: 1.15; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }       
+        .text-positive { color: var(--positive) !important; }
+        .text-negative { color: var(--negative) !important; }
+        .text-info { color: var(--info) !important; }
+
+        .dashboard-layout { display: grid; grid-template-columns: 1fr; gap: var(--section-gap); }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .card-header { min-height: 52px; padding: 14px 18px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 14px; line-height: 1.3; display: flex; justify-content: space-between; align-items: center; }
+        .card-body { padding: clamp(16px, 2vw, 20px); }
+        
+        /* =========================================
+           5. AI Greeting & Margin Alert 
+        ========================================= */
+        .ai-greeting-card {
+            background: var(--info-bg); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: var(--radius-lg);
+            padding: 16px 20px; margin-bottom: var(--section-gap); display: flex; gap: 16px; align-items: flex-start;
+            box-shadow: var(--shadow-sm);
+        }
+        html[data-theme="dark"] .ai-greeting-card { background: rgba(12, 74, 110, 0.4); border-color: rgba(56, 189, 248, 0.2); }
+        .ai-avatar {
+            width: 48px; height: 48px; background: var(--info); color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        }
+        .ai-message { flex: 1; font-size: var(--text-md); color: var(--text-primary); line-height: 1.6; }
+        .ai-message p { margin-bottom: 6px; }
+        .ai-message p:last-child { margin-bottom: 0; color: var(--info); font-weight: 600; }
+
+        .margin-alert-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 16px 20px; margin-bottom: var(--section-gap); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm);
+        }
+        .margin-alert-header { display: flex; justify-content: space-between; align-items: center; color: var(--text-primary); }
+        .progress-bg { width: 100%; height: 12px; background: var(--bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease-out, background-color 0.3s ease; }
+        .margin-alert-footer { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+        /* =========================================
+           6. Trade Cards (Positions & Mobile Trades)
+        ========================================= */
+        .trade-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            margin-bottom: 0; position: relative; overflow: hidden; display: flex; flex-direction: column; transition: all 0.2s;
+        }
+        .trade-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-sm); }
+
+        .tc-header { background: var(--bg); min-height: 42px; padding: 8px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .tc-header-id { font-weight: 700; color: var(--text-muted); font-size: 13px; font-family: var(--font-mono); }
+
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .badge-flying { background: var(--info-bg); color: var(--info); }
+        .badge-closed-profit { background: var(--positive-bg); color: var(--positive); }
+        .badge-closed-loss { background: var(--negative-bg); color: var(--negative); }
+        .badge-danger { background: var(--negative-bg); color: var(--negative); }
+        .badge-attention { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(217,119,6,0.2); }
+
+        .tc-content { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+        .tc-flex-row { display: flex; justify-content: space-between; align-items: flex-start; }
+        .tc-symbol { font-size: clamp(19px, 2vw, 22px); font-weight: 800; color: var(--accent); line-height: 1.2; font-family: var(--font-mono); }
+        .tc-strategy { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; font-weight: 500; line-height: 1.4; }
+
+        .tc-profit-group { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .tc-profit-val { font-size: 24px; font-weight: 800; line-height: 1.1; font-family: var(--font-mono); }
+
+        .roc-pill { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 800; font-family: var(--font-mono); display: inline-block; }
+        html[data-theme="dark"] .roc-pill { background: #0c4a6e; color: #38bdf8; }
+
+        .tc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px 14px; }
+        .tc-grid-item { display: flex; flex-direction: column; gap: 4px; }
+        .tc-grid-label { font-size: var(--text-xs); color: var(--text-muted); font-weight: 700; line-height: 1.3; }
+        .tc-grid-val { font-size: var(--text-sm); font-weight: 800; color: var(--text-primary); font-family: var(--font-mono); line-height: 1.35; overflow-wrap: anywhere; }
+
+        .tc-note-box { background: var(--bg); border: 1px dashed var(--border); border-radius: 8px; min-height: 40px; padding: 9px 11px; font-size: var(--text-sm); color: var(--text-secondary); display: flex; align-items: center; gap: 8px; font-weight: 500; line-height: 1.45; }
+
+        /* =========================================
+           7. Trades Table & Toolbars
+        ========================================= */
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; min-height: var(--control-h); margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .toolbar-group { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0; }
+        .search-input {
+            display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border);
+            height: var(--control-h); padding: 0 12px; border-radius: var(--control-radius); width: min(360px, 100%);
+            transition: border 0.2s;
+        }
+        .search-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+        .search-input input { border: none; background: transparent; outline: none; width: 100%; min-width: 0; height: 100%; font-size: var(--control-font); color: var(--text-primary); }
+
+        .mobile-sort {
+            display: none; height: var(--control-h); padding: 0 40px 0 13px; font-size: var(--control-font); font-weight: 600;
+            border-radius: var(--control-radius); border: 1px solid var(--border); background-color: var(--surface);
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+            color: var(--text-primary); outline: none; appearance: none; -webkit-appearance: none;
+            box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer;
+        }
+        html[data-theme="dark"] .mobile-sort { background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); }
+        .mobile-sort:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+
+        #pos-summary { font-size: var(--text-sm); color: var(--text-muted); white-space: nowrap; }
+        #positions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--card-gap); }
+
+        .table-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 860px; text-align: left; }
+        th, td { padding: 13px 12px; border-bottom: 1px solid var(--border); line-height: 1.4; font-size: 13px; text-align: left; vertical-align: middle; }
+        th:hover { background: var(--border); color: var(--text-primary); }
+        tr:hover td { background: var(--bg); }
+        .sort-icon { font-size: 14px; vertical-align: middle; opacity: 0.3; margin-left: 4px; }
+        th.active-sort .sort-icon { opacity: 1; color: var(--accent); }
+        td.actions { white-space: nowrap; text-align: center; }
+
+        /* =========================================
+           8. Dialogs & Forms
+        ========================================= */
+        dialog {
+            margin: auto; border: none; border-radius: var(--radius-xl); background: var(--surface-elevated);
+            color: var(--text-primary); padding: 0; width: min(720px, calc(100vw - 32px)); max-width: 760px;
+            box-shadow: var(--shadow-modal); max-height: min(88vh, 820px); display: none; flex-direction: column; overflow: hidden;
+        }
+        dialog[open] { display: flex; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); animation: fadeIn 0.2s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .dialog-header { min-height: 64px; padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .dialog-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
+        .dialog-content { padding: 20px; overflow-y: auto; flex: 1 1 auto; min-height: 0; overscroll-behavior-y: contain; }
+        .dialog-footer { min-height: 68px; padding: 12px 20px; border-top: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: flex-end; gap: var(--space-12); flex-shrink: 0; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-label { min-height: 20px; font-size: var(--text-sm); font-weight: 700; line-height: 1.45; color: var(--text-secondary); }
+        .form-control {
+            height: var(--control-h); padding: 0 13px; border: 1px solid var(--border); border-radius: var(--control-radius);
+            background: var(--surface); color: var(--text-primary); font-size: 16px; line-height: 1.2; transition: all 0.2s;
+            width: 100%; appearance: none; -webkit-appearance: none;
+        }
+        .form-control:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-bg); }
+        .form-control:disabled { background: var(--bg); color: var(--text-muted); cursor: not-allowed; }
+
+        input[type="date"].form-control { padding-right: 12px; }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; transition: 0.2s; }
+        input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+        .iron-condor-ui { display: none; grid-column: 1 / -1; border: 1px solid var(--accent); border-radius: var(--radius-md); padding: 14px; background: var(--accent-bg); gap: 12px; }
+        .iron-condor-ui.active { display: grid; grid-template-columns: 1fr 1fr; }
+        .iron-leg { background: var(--surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .iron-leg-title { font-size: var(--text-sm); font-weight: 700; color: var(--accent); text-align: center; border-bottom: 1px dashed var(--border); padding-bottom: 6px; }
+
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: var(--text-muted); text-align: center; gap: 12px; }
+
+        #global-loader { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; color: white; gap: 16px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #toast-container { position: fixed; right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); z-index: 10000; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: var(--surface-elevated); color: var(--text-primary); min-height: 44px; padding: 10px 13px; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: flex; align-items: center; gap: 12px; animation: toastIn 0.3s ease-out; max-width: min(380px, calc(100vw - 28px)); font-size: var(--text-sm); line-height: 1.4; }
+        .toast.success { border-left: 4px solid var(--positive); }
+        .toast.error { border-left: 4px solid var(--negative); }
+        .toast.leaving { animation: toastOut 0.3s forwards; }
+        @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes toastOut { to { transform: translateX(100%); opacity: 0; } }
+
+        /* =========================================
+           9. Performance & Charts
+        ========================================= */
+        .chart-wrapper { width: 100%; height: clamp(240px, 30vw, 320px); position: relative; margin-top: var(--space-16); }
+        .perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--section-gap); margin-top: var(--section-gap); }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .stat-row:last-child { border-bottom: none; }
+
+        .stat-year-header { background: var(--bg); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 4px; font-size: 14px; cursor: pointer; user-select: none; }
+        .stat-year-header:first-child { margin-top: 0; }
+        details.year-accordion > summary { list-style: none; outline: none; }
+        details.year-accordion > summary::-webkit-details-marker { display: none; }
+        .expand-icon { transition: transform 0.2s ease; font-size: 18px; color: var(--text-muted); }
+        details.year-accordion[open] summary .expand-icon { transform: rotate(90deg); }
+
+        /* =========================================
+           10. Responsive — Tablet
+        ========================================= */
+        @media (max-width: 1023px) {
+            #sidebar { width: calc(76px + env(safe-area-inset-left, 0px)); }
+            .brand { padding: calc(18px + max(env(safe-area-inset-top, 0px), 20px)) 0 18px; justify-content: center; }
+            .brand-title, .brand-subtitle { display: none; }
+            .nav-item { justify-content: center; padding: 12px 8px; font-size: 0; min-height: 52px; }
+            .nav-item .material-symbols-rounded { font-size: 24px; }
+            .nav-item.active { position: relative; }
+            .nav-item.active::before {
+                content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+                width: 3px; height: 22px; border-radius: 0 3px 3px 0; background: var(--accent);
+            }
+            .sidebar-footer { padding: 12px 8px; }
+            .sidebar-footer span#desktop-sync-text { display: none; }
+
+            .dashboard-layout { grid-template-columns: 1fr; }
+            
+            .search-input { flex: 1; width: auto; }
+            .mobile-sort { display: block; width: 190px; flex: 0 0 190px; }
+
+            #mobile-nav {
+                background-color: #0f172a !important;
+                border-top: none;
+            }
+            #mobile-nav .mobile-nav-item {
+                color: #64748b;
+            }
+            #mobile-nav .mobile-nav-item.active {
+                color: var(--accent);
+            }
+        }
+
+        @media (max-width: 1023px) {
+            #trades-table-container { display: none; }
+            .mobile-only-flex { display: flex; flex-direction: column; gap: 12px; }
+        }
+
+        /* =========================================
+           11. Responsive — Mobile
+        ========================================= */
+        @media (max-width: 768px) {
+            #app-shell { background-color: var(--bg); }
+            
+            :root { --page-gutter: 12px; --section-gap: 14px; --card-gap: 12px; }
+
+            .hide-on-mobile { display: none !important; }
+            .mobile-brand { display: inline-block; font-size: 20px; vertical-align: middle; margin-right: 4px; }
+            #sidebar { display: none; }
+            
+            #header { 
+                height: calc(58px + max(env(safe-area-inset-top, 0px), 20px)); 
+                padding-top: max(env(safe-area-inset-top, 0px), 20px);
+                padding-left: max(12px, env(safe-area-inset-left, 0px));
+                padding-right: max(12px, env(safe-area-inset-right, 0px));
+                background-color: #0f172a; border-bottom: none;       
+            }
+            .header-title { font-size: 16px; font-weight: 800; min-width: 0; color: #f8fafc; }
+            #header-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .header-actions { gap: 6px; }
+            .header-actions .btn-icon { width: 40px; min-width: 40px; height: 40px; color: #94a3b8; }
+
+            #mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b));
+                min-height: calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b));
+                z-index: 50;
+                background-color: #0f172a !important;
+                border-top: none;
+                display: flex;
+                justify-content: space-around;
+                align-items: stretch;
+                padding-top: 2px;
+                padding-bottom: var(--mobile-nav-safe-b);
+                overflow: visible;
+            }
+
+            .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 0; font-size: 10px; gap: 4px; transition: color 0.2s; color: #64748b; }
+            .mobile-nav-item.active { color: var(--accent); }
+            .mobile-nav-item .material-symbols-rounded { font-size: 22px; }
+            .mobile-nav-item-fab {
+                justify-content: flex-end;
+                overflow: visible;
+                padding-bottom: 0;
+            }
+            .mobile-nav-fab {
+                width: 58px;
+                height: 58px;
+                transform: translateY(-9px);
+                background: #08112b;
+                color: #ffffff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+                border: 4px solid #ffffff;
+                position: relative;
+                z-index: 2;
+                margin: 0 auto;
+            }
+            .mobile-nav-fab .material-symbols-rounded { font-size: 32px; line-height: 1; }
+            
+            #view-container { padding: 12px 12px calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b) + 10px); }
+
+            .grid-kpi { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+            .kpi-card { min-height: 126px; padding: 14px 10px; }
+            .kpi-label { font-size: 11px; }
+            .kpi-value { font-size: clamp(19px, 6vw, 26px); }
+            .kpi-sub { font-size: 11px; }
+
+            .dashboard-layout, .perf-grid { gap: 12px; }
+            .card-header { min-height: 48px; padding: 12px 14px; }
+            .card-body { padding: 14px; }
+            .chart-wrapper { height: 250px; }
+
+            .table-toolbar { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
+            .toolbar-group { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; }            
+            .search-input, .mobile-sort { width: 100%; min-width: 0; flex: none; }
+            #pos-summary { justify-self: start; margin-top: -2px; }
+
+            #trades-table-container { display: none; }
+            .mobile-only-flex { display: flex; flex-direction: column; gap: 12px; }
+            #positions-grid { grid-template-columns: 1fr; }
+
+            .tc-content { padding: 14px; }
+            .tc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .tc-symbol { font-size: 20px; }
+            .tc-profit-val { font-size: 21px; }
+            .tc-note-box { align-items: flex-start; }
+
+            dialog {
+                width: 100%; max-width: 100%; max-height: 90vh;
+                border-radius: 18px 18px 0 0; margin: auto 0 0 0;
+            }
+            dialog[open] { animation: slideUpMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+            @keyframes slideUpMobile { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+            .dialog-header { min-height: 58px; padding: 10px 14px; }
+            .dialog-title { font-size: 17px; }
+            .dialog-content { padding: 16px 14px; }
+            .dialog-footer { min-height: 64px; padding: 10px 14px calc(10px + max(env(safe-area-inset-bottom, 0px), 8px)); gap: 8px; }
+            .dialog-footer .btn { flex: 1; }
+
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .iron-condor-ui.active { grid-template-columns: 1fr; }
+            .iron-leg { gap: 9px; }
+
+            #editDialog .dialog-footer { display: flex; flex-direction: column; gap: 12px; }
+            #editDialog .dialog-footer > div { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 8px; order: 1; }
+            #editDialog .dialog-footer > .btn-danger { width: 100%; flex: none; order: 2; }
+
+            #toast-container { 
+                bottom: auto; top: calc(16px + max(env(safe-area-inset-top, 0px), 20px)); right: 12px; left: auto; 
+            }
+            .toast { max-width: calc(100vw - 24px); }
+        }
+
+        @media (max-width: 480px) {
+            .kpi-card { min-height: 118px; padding: var(--space-16) var(--space-12); }
+            .kpi-label { gap: 4px; }
+            .kpi-label .material-symbols-rounded { font-size: 16px; }
+            .kpi-value { font-size: 22px; }
+            .kpi-sub { font-size: 13px; }
+
+            .tc-flex-row { gap: 10px; }
+            .tc-symbol { font-size: 19px; }
+            .tc-strategy { overflow-wrap: anywhere; }
+            .tc-profit-val { font-size: 20px; }
+
+            .dialog-title { font-size: 17px; }
+            .dialog-footer { flex-wrap: wrap; }
+            .dialog-footer .btn { min-width: 0; }
+            #newTradeDialog .dialog-footer .btn-ghost { flex: 0 0 auto; }
+            #newTradeDialog .dialog-footer .btn-secondary { flex: 1; }
+
+            .header-title { font-size: 15px; }
+            .header-actions { gap: 6px; }
+        }
+
+        html.pwa-standalone,
+        html.pwa-standalone body {
+            background-color: var(--bg);
+        }
+        html.pwa-standalone #header {
+            padding-top: env(safe-area-inset-top, 0px);
+            height: calc(64px + env(safe-area-inset-top, 0px));
+        }
+        html.pwa-standalone .brand {
+            padding-top: calc(24px + env(safe-area-inset-top, 0px));
+        }
+        html.pwa-standalone #mobile-nav {
+            background-color: #0f172a;
+            border-top: none;
+        }
+        @media (max-width: 768px) {
+            html.pwa-standalone #header {
+                height: calc(58px + env(safe-area-inset-top, 0px));
+            }
+        }
+
+        #app-shell {
+            min-height: 0;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            html { background-color: #0f172a; }
+        }
+
+        @supports not (height: 100dvh) {
+            html, body { min-height: -webkit-fill-available; }
+        }
+
+        /* iPhone Safari / in-app browser：避免初次直向載入底部露白 */
+        @media (max-width: 768px) {
+            html {
+                background: #0a0e1a !important;
+                min-height: 100%;
+                min-height: 100dvh;
+            }
+
+            body {
+                background: #0a0e1a !important;
+            }
+
+            /* 登入頁向視窗底部額外延伸，處理 iOS 初次載入 viewport 少算底部區域 */
+            #login-screen {
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: -220px !important;
+                min-height: calc(100dvh + 220px);
+                padding-bottom: 244px;
+                background: radial-gradient(circle at 50% 0%, #141a2e 0%, #0a0e1a 60%) !important;
+            }
+
+            /* 即使 JS 回報的 --app-height 偏小，也不允許頁面低於動態視窗高度 */
+            html, body {
+                height: max(var(--app-height), 100dvh);
+                min-height: max(var(--app-height), 100dvh);
+            }
+        }
+
+        /* iPhone Safari 初次直向載入：強制底部背景覆蓋至實際視窗底端 */
+        @media (max-width: 768px) {
+            html, body {
+                width: 100%;
+                height: var(--app-height);
+                min-height: var(--app-height);
+                background-color: #0f172a;
+            }
+
+            body::after {
+                content: '';
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: calc(var(--mobile-nav-content-h) + max(env(safe-area-inset-bottom, 0px), 2px));
+                background: #0f172a;
+                z-index: 49;
+                pointer-events: none;
+            }
+
+            #mobile-nav {
+                bottom: 0 !important;
+                min-height: calc(var(--mobile-nav-content-h) + max(env(safe-area-inset-bottom, 0px), 2px));
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 2px);
+                background: #0f172a !important;
+            }
+        }
+
+        /* v5: bottom navigation lower, matching reference screenshot */
+        @media (max-width: 768px) {
+            #mobile-nav {
+                height: calc(50px + max(env(safe-area-inset-bottom, 0px), 2px)) !important;
+                min-height: calc(50px + max(env(safe-area-inset-bottom, 0px), 2px)) !important;
+                padding-top: 2px !important;
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 2px) !important;
+                background: #0f172a !important;
+                align-items: stretch !important;
+            }
+            #mobile-nav .mobile-nav-item {
+                justify-content: flex-end !important;
+                padding-bottom: 0 !important;
+            }
+            #mobile-nav .mobile-nav-fab {
+                width: 58px !important;
+                height: 58px !important;
+                transform: translateY(-9px) !important;
+                background: #08112b !important;
+                border: 4px solid #ffffff !important;
+            }
+            body::after {
+                height: calc(50px + max(env(safe-area-inset-bottom, 0px), 2px)) !important;
+                background: #0f172a !important;
+            }
+            #view-container {
+                padding-bottom: calc(50px + max(env(safe-area-inset-bottom, 0px), 2px) + 10px) !important;
+            }
+        }
+    
+
+        /* v6: make the bar itself visibly lower; restore original + size */
+        @media (max-width: 768px) {
+            :root {
+                --mobile-nav-content-h: 28px !important;
+                --mobile-nav-safe-b: max(env(safe-area-inset-bottom, 0px), 4px) !important;
+            }
+
+            #mobile-nav {
+                height: calc(28px + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
+                min-height: calc(28px + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
+                padding-top: 0 !important;
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 4px) !important;
+                background: #0f172a !important;
+                align-items: flex-end !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 44px !important;
+                min-height: 44px !important;
+                justify-content: flex-end !important;
+                padding-bottom: 2px !important;
+                transform: translateY(-4px);
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                transform: none !important;
+                padding-bottom: 0 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                width: 65px !important;
+                height: 65px !important;
+                min-width: 65px !important;
+                min-height: 65px !important;
+                transform: translateY(-10px) !important;
+                background: #08112b !important;
+                color: #fff !important;
+                border: 4px solid #fff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 10px 24px rgba(0,0,0,.22) !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px !important;
+            }
+
+            body::after {
+                height: calc(28px + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
+                background: #0f172a !important;
+            }
+
+            #view-container {
+                padding-bottom: calc(42px + max(env(safe-area-inset-bottom, 0px), 4px)) !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="material-symbols-rounded login-brand-icon">token</span>
+            <div class="login-brand-title">權力翻身</div>
+            <div class="login-brand-subtitle">Trading Terminal · 交易決策終端</div>
+        </div>
+        <div>
+            <label class="login-label" for="login-code-input">請輸入您的專屬代號</label>
+            <input type="password" id="login-code-input" class="login-input" placeholder="輸入代號以登入" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();handleLogin();}">
+        </div>
+        <div id="login-error" class="login-error"></div>
+        <button class="login-submit-btn" id="login-submit-btn" onclick="handleLogin()">
+            <span class="material-symbols-rounded">login</span> 登入
+        </button>
+        <div class="login-hint">代號為您的專屬雲端資料識別碼，如尚未取得請聯繫管理員</div>
+    </div>
+</div>
+
+<div id="global-loader">
+    <div class="spinner"></div>
+    <div style="font-weight: 600;" id="loader-text">同步資料中...</div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="app-shell">
+    <aside id="sidebar">
+        <div class="brand">
+            <span class="material-symbols-rounded brand-icon">token</span>
+            <div>
+                <div class="brand-title">權力翻身</div>
+                <div class="brand-subtitle">Trading Terminal</div>
+            </div>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-item active" data-target="dashboard" onclick="navigate('dashboard')" title="總覽 Dashboard">
+                <span class="material-symbols-rounded">dashboard</span> 總覽 Dashboard
+            </button>
+            <button class="nav-item" data-target="positions" onclick="navigate('positions')" title="持倉 Positions">
+                <span class="material-symbols-rounded">flight_takeoff</span> 持倉 Positions
+            </button>
+            <button class="nav-item" data-target="trades" onclick="navigate('trades')" title="紀錄 Trades">
+                <span class="material-symbols-rounded">list_alt</span> 紀錄 Record
+            </button>
+            <button class="nav-item" data-target="performance" onclick="navigate('performance')" title="績效 Performance">
+                <span class="material-symbols-rounded">monitoring</span> 績效 Performance
+            </button>
+            <button class="nav-item" data-target="settings" onclick="navigate('settings')">
+                <span class="material-symbols-rounded">settings</span> 系統設定
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sync-status" onclick="loadData(true)">
+                <div class="sync-indicator" id="desktop-sync-dot"></div>
+                <span id="desktop-sync-text">已同步 (點擊重整)</span>
+            </div>
+        </div>
+    </aside>
+
+    <main id="main-area">
+        <header id="header">
+            <div class="header-title">
+                <span class="material-symbols-rounded brand-icon mobile-brand" style="color: var(--accent);">token</span>
+                <span id="header-title">總覽 Dashboard</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="header-sync-btn" onclick="loadData(true)" title="重新整理同步">
+                    <span class="material-symbols-rounded" id="header-sync-icon">sync</span>
+                </button>
+                <button class="btn-icon" onclick="toggleTheme()" title="切換主題">
+                    <span class="material-symbols-rounded" id="theme-icon-header">dark_mode</span>
+                </button>
+                <button class="btn-icon mobile-setting-btn" id="header-settings-btn" onclick="navigate('settings')" title="系統設定">
+                    <span class="material-symbols-rounded">settings</span>
+                </button>
+                <button class="btn-icon mobile-setting-btn header-btn-hidden" id="header-close-settings-btn" onclick="closeSettingsMobile()" title="關閉">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+                <button class="btn btn-primary hide-on-mobile" onclick="openNewTradeDialog()">
+                    <span class="material-symbols-rounded">add</span>
+                    <span>新增交易</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="view-container">
+            
+            <section id="view-dashboard" class="view-section active">
+                 
+                <div class="grid-kpi">
+                    <div class="kpi-card">
+                        <div class="kpi-label"><span class="material-symbols-rounded">account_balance</span> 預估帳戶淨值</div>
+                        <div class="kpi-value" id="dash-equity">$0.00</div>
+                        <div class="kpi-sub" id="dash-initial-capital">初始資金 $10,000.00</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label"><span class="material-symbols-rounded">trending_up</span> 已實現總損益</div>
+                        <div class="kpi-value" id="dash-pnl">$0.00</div>
+                        <div class="kpi-sub" id="dash-roc">總 ROC 0.00%</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label"><span class="material-symbols-rounded">flight_takeoff</span> 待實現損益</div>
+                        <div class="kpi-value text-info" id="dash-unrealized">$0.00</div>
+                        <div class="kpi-sub">圈存 <span id="dash-margin"></span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label"><span class="material-symbols-rounded">pie_chart</span> 歷史勝率</div>
+                        <div class="kpi-value" id="dash-winrate">0.0%</div>
+                        <div class="kpi-sub" id="dash-closed-count">已結案 0 筆</div>
+                    </div>
+                </div>
+                
+                 <div class="ai-greeting-card">
+                    <div class="ai-avatar">
+                        <span class="material-symbols-rounded" style="font-size: 28px;">smart_toy</span>
+                    </div>
+                    <div class="ai-message" id="ai-message-content">
+                        </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--card-gap); margin-bottom: var(--section-gap);">
+                    <div class="margin-alert-card" style="margin-bottom: 0; align-items: center; text-align: center; padding: 24px 20px;">
+                        <div class="dash-card-title" style="justify-content: center; margin-bottom: 0;">
+                            <span class="material-symbols-rounded">speed</span>
+                            資金水位 (保證金使用率)
+                        </div>
+                        
+                        <div style="position: relative; width: 180px; height: 90px; margin: auto;">
+                            <canvas id="marginGaugeChart"></canvas>
+                            <div style="position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center;">
+                                <span id="margin-usage-text" style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); line-height: 1;">0.0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="margin-alert-footer" id="margin-safe-text" style="margin-top: 0; font-size: 13px;">
+                            目前水位計算中...
+                        </div>
+                    </div>
+
+                    <div class="margin-alert-card" style="margin-bottom: 0; align-items: center; padding: 24px 20px; position: relative; border: 1px solid var(--border);">                            
+                        <div class="dash-card-title" style="margin-bottom: 16px;">
+                            <span class="material-symbols-rounded">flag</span>
+                            本月獲利與目標
+                        </div>
+                        
+                        <div style="text-align: center; margin-bottom: 16px;">
+                            <div id="monthly-profit-text" class="kpi-value" style="font-weight: 800; line-height: 1;">$0.00</div>
+                            <div id="monthly-target-text" style="font-size: 13px; color: var(--text-muted); font-weight: 500; font-family: var(--font-mono); margin-top: 4px;">目標 $0.00 (5%)</div>
+                        </div>
+                                                
+                        <div style="width: 100%; max-width: 260px; margin: 0 auto; height: 26px; background: var(--border); border-radius: 13px; position: relative; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);">
+                            <div id="monthly-progress-fill" style="position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); transition: width 1s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;"></div>
+                            <div id="monthly-percent-text" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; font-family: var(--font-mono); color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.35); pointer-events: none; letter-spacing: 0.5px;">
+                                0.0%
+                            </div>
+                        </div>
+                        
+                        <div class="margin-alert-footer" id="monthly-status-text" style="margin-top: 16px; font-size: 13px; text-align: center;">
+                            進度計算中...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-positions" class="view-section">
+                <div class="table-toolbar">
+                    <div class="toolbar-group">
+                        <div class="search-input">
+                            <span class="material-symbols-rounded">filter_list</span>
+                            <input type="text" id="pos-filter" placeholder="篩選標的、策略..." oninput="renderPositions()">
+                        </div>
+                    </div>
+                    <div id="pos-summary">共 0 筆持倉</div>
+                </div>
+                <div id="positions-grid"></div>
+            </section>
+
+            <section id="view-trades" class="view-section">
+                <div class="table-toolbar">
+                    <div class="toolbar-group">
+                        <div class="search-input">
+                            <span class="material-symbols-rounded">search</span>
+                            <input type="text" id="trades-search" placeholder="搜尋交易 ID、標的、備註…（例如 TQQQ 202608 可加總當月損益）" oninput="debouncedRenderTrades()">
+                        </div>
+                        <div id="trades-summary-badge" style="display: none; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; background: var(--surface-elevated); padding: 0 12px; height: var(--control-h); border-radius: var(--control-radius); border: 1px solid var(--border); white-space: nowrap;">
+                            策略總淨利：<span id="trades-summary-pnl" class="tabular-nums"></span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="exportCSV()"><span class="material-symbols-rounded">download</span> CSV</button>
+                    </div>
+                </div>
+                
+                <div class="table-container" id="trades-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;" onclick="sortTrades('tradeId')">交易 ID <span class="sort-icon material-symbols-rounded">swap_vert</span></th>
+                                <th onclick="sortTrades('date')">日期 <span class="sort-icon material-symbols-rounded">swap_vert</span></th>
+                                <th onclick="sortTrades('symbol')">標的/策略 <span class="sort-icon material-symbols-rounded">swap_vert</span></th>
+                                <th>收/付/費</th>
+                                <th>損益</th>
+                                <th>備註</th> 
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-table-body"></tbody>
+                    </table>
+                </div>
+                
+                <div id="trades-mobile-container" class="mobile-only-flex"></div>
+            </section>
+            
+            <section id="view-performance" class="view-section">
+                <div class="card" style="margin-top: 0; margin-bottom: 24px;">
+                    <div class="card-header">月度損益與資金成長趨勢</div>
+                    <div class="card-body">
+                        <div class="chart-wrapper"><canvas id="combinedChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="perf-grid">
+                    <div class="card">
+                        <div class="card-header">每年獲利與投報率</div>
+                        <div class="card-body" id="perf-monthly" style="padding-top: 12px;"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">標的績效分析 (Top 10)</div>
+                        <div class="card-body" id="perf-symbol"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="view-section">
+                <div class="card" style="max-width: 640px; margin: 0 auto; margin-top: 24px;">
+                    <div class="card-header" style="font-size: 15px; display: flex; align-items: center; gap: 8px;">
+                        <span class="material-symbols-rounded" style="color: var(--accent);">tune</span> 
+                        系統偏好設定
+                    </div>
+                    
+                    <div class="card-body" style="padding: 28px clamp(16px, 4vw, 32px);">
+                        <div style="display: flex; flex-direction: column; gap: 32px;">
+                            <div>
+                                <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                                    <span class="material-symbols-rounded" style="color: var(--text-muted); font-size: 20px;">account_circle</span>
+                                    基本設定
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">AI 助理稱呼</label>
+                                        <input type="text" id="setting-name" class="form-control" placeholder="例如：交易員">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">帳戶初始本金 (USD)</label>
+                                        <input type="number" id="setting-capital" class="form-control" placeholder="預設：10000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">每月獲利目標 (%)</label>
+                                        <input type="number" id="setting-monthly-target" class="form-control" placeholder="預設：5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="height: 1px; background: var(--border);"></div>
+
+                            <div>
+                                <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span class="material-symbols-rounded" style="color: var(--text-muted); font-size: 20px;">cloud_sync</span>
+                                        雲端資料庫串接
+                                    </div>
+                                    <button type="button" class="btn-icon" id="toggle-api-url-btn" onclick="toggleApiUrlField()" title="顯示/隱藏 API 網址">
+                                        <span class="material-symbols-rounded" id="toggle-api-url-icon">visibility</span>
+                                    </button>
+                                </div>
+                                <div class="form-grid" id="api-url-field-wrap" style="display: none;">
+                                    <div class="form-group full">
+                                        <label class="form-label">Google Apps Script 網址 (API URL)</label>
+                                        <input type="text" id="setting-api-url" class="form-control" placeholder="請輸入您的 GAS 網址">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 36px; display: flex; justify-content: flex-end; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="logout()" style="padding: 0 24px;">
+                                <span class="material-symbols-rounded">logout</span> 登出
+                            </button>
+                            <button class="btn btn-primary" onclick="saveSettings()" style="padding: 0 24px;">
+                                <span class="material-symbols-rounded">save</span> 儲存設定
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<nav id="mobile-nav">
+    <button class="mobile-nav-item active" data-target="dashboard" onclick="navigate('dashboard')">
+        <span class="material-symbols-rounded">dashboard</span> 總覽
+    </button>
+    <button class="mobile-nav-item" data-target="positions" onclick="navigate('positions')">
+        <span class="material-symbols-rounded">flight_takeoff</span> 持倉
+    </button>
+    <button class="mobile-nav-item mobile-nav-item-fab" onclick="openNewTradeDialog()">
+        <div class="mobile-nav-fab"><span class="material-symbols-rounded">add</span></div>
+    </button>
+    <button class="mobile-nav-item" data-target="trades" onclick="navigate('trades')">
+        <span class="material-symbols-rounded">list_alt</span> 紀錄
+    </button>
+    <button class="mobile-nav-item" data-target="performance" onclick="navigate('performance')">
+        <span class="material-symbols-rounded">monitoring</span> 績效
+    </button>
+</nav>
+
+<dialog id="newTradeDialog">
+    <div class="dialog-header">
+        <div class="dialog-title">新增交易</div>
+        <button class="btn-icon" onclick="clearTradeForm(); closeDialog('newTradeDialog')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="dialog-content">
+        <form id="tradeForm" class="form-grid" onsubmit="handleNewTradeSubmit(event)">
+            <div class="form-group">
+                <label class="form-label">開倉日期 *</label>
+                <input type="date" id="newOpenDate" class="form-control" required onclick="try{this.showPicker()}catch(e){}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">到期日期</label>
+                <input type="date" id="newExpiryDate" class="form-control" onclick="try{this.showPicker()}catch(e){}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">標的代碼 *</label>
+                <input type="text" id="newSymbol" class="form-control" placeholder="例: SPY" required oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')">
+            </div>
+            <div class="form-group">
+                <label class="form-label">交易類型 *</label>
+                <input type="text" id="newTradeType" class="form-control" placeholder="例: 垂直價差, 鐵鷹" required oninput="updateNewTradeTypeUI()">
+            </div>
+            
+            <div class="form-group" id="singlePremiumGroup">
+                <label class="form-label">開倉權利金 *</label>
+                <input type="number" id="newPremiumReceived" class="form-control tabular-nums" step="0.01" required>
+            </div>
+            <div class="form-group" id="singlePointGroup">
+                <label class="form-label">策略點位</label>
+                <input type="text" id="newPoint" class="form-control" placeholder="例: 575/570">
+            </div>
+            
+            <div class="iron-condor-ui" id="newIronCondorPanel">
+                <div class="iron-leg">
+                    <div class="iron-leg-title">PUT方策略</div>
+                    <input type="text" id="newIronPointA" class="form-control" placeholder="點位 (例: 570/575)">
+                    <input type="number" id="newPremiumReceivedA" class="form-control tabular-nums" step="0.01" placeholder="權利金 *" oninput="updateIronPremiumTotal()">
+                </div>
+                <div class="iron-leg">
+                    <div class="iron-leg-title">CALL方策略</div>
+                    <input type="text" id="newIronPointB" class="form-control" placeholder="點位 (例: 620/625)">
+                    <input type="number" id="newPremiumReceivedB" class="form-control tabular-nums" step="0.01" placeholder="權利金 *" oninput="updateIronPremiumTotal()">
+                </div>
+                <div style="grid-column: 1/-1; text-align: right; font-size: 13px;">總權利金: <strong id="newPremiumReceivedTotal" class="tabular-nums text-positive">$0.00</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">總預估手續費</label>
+                <input type="number" id="newFees" class="form-control tabular-nums" step="0.66" min="0" max="5.28" value="0.66">
+            </div>
+            <div class="form-group" id="sharedNotesGroup">
+                <label class="form-label">備註說明</label>
+                <input type="text" id="newNotes" class="form-control" placeholder="選填...">
+            </div>
+
+            <button type="submit" style="display:none;"></button>
+        </form>
+    </div>
+    <div class="dialog-footer">
+        <button class="btn btn-ghost" onclick="clearTradeForm()">清空</button>
+        <button class="btn btn-secondary" onclick="clearTradeForm(); closeDialog('newTradeDialog')">取消</button>
+        <button class="btn btn-primary" onclick="document.getElementById('tradeForm').requestSubmit()">新增儲存</button>
+    </div>
+</dialog>
+
+<dialog id="editDialog">
+    <div class="dialog-header">
+        <div class="dialog-title">修改紀錄</div>
+        <button class="btn-icon" onclick="closeDialog('editDialog')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="dialog-content">
+        <div class="form-grid">
+            <div class="form-group"><label class="form-label">開倉日期</label><input type="date" id="editOpenDate" class="form-control" onclick="try{this.showPicker()}catch(e){}"></div>
+            <div class="form-group"><label class="form-label">到期日期</label><input type="date" id="editExpiryDate" class="form-control" onclick="try{this.showPicker()}catch(e){}"></div>
+            <div class="form-group"><label class="form-label">標的代碼</label><input type="text" id="editSymbol" class="form-control"></div>
+            <div class="form-group"><label class="form-label">交易類型</label><input type="text" id="editTradeType" class="form-control"></div>
+            <div class="form-group" id="singleEditPremiumReceivedGroup"><label class="form-label">開倉權利金</label><input type="number" id="editPremiumReceived" class="form-control tabular-nums" step="0.01"></div>
+            <div class="form-group" id="singleEditPremiumPaidGroup"><label class="form-label">平倉權利金</label><input type="number" id="editPremiumPaid" class="form-control tabular-nums" step="0.01"></div>
+            <div class="form-group" id="singleEditPointGroup"><label class="form-label">策略點位</label><input type="text" id="editPoint" class="form-control"></div>
+            <div class="form-group" id="singleEditCloseDateGroup"><label class="form-label">結案日期</label><input type="date" id="editCloseDate" class="form-control" onclick="try{this.showPicker()}catch(e){}"></div>
+            <div class="form-group"><label class="form-label">保證金</label><input type="number" id="editMargin" class="form-control tabular-nums" step="0.01"></div>
+            <div class="form-group"><label class="form-label">總手續費</label><input type="number" id="editFees" class="form-control tabular-nums" step="0.66" min="0" max="5.28"></div>
+            <div class="form-group full" id="singleEditNotesGroup"><label class="form-label">備註說明</label><input type="text" id="editNotes" class="form-control"></div>
+            
+            <div class="iron-condor-ui" id="ironEditPanel">
+                <div class="iron-leg">
+                    <div class="iron-leg-title">PUT方</div>
+                    <input type="text" id="editIronPointA" class="form-control" placeholder="點位">
+                    <input type="number" id="editPremiumReceivedA" class="form-control tabular-nums" step="0.01" placeholder="開倉權利金" oninput="updateEditIronTotals()">
+                    <input type="date" id="editCloseDateA" class="form-control" title="平倉日" onclick="try{this.showPicker()}catch(e){}">
+                    <input type="number" id="editPremiumPaidA" class="form-control tabular-nums" step="0.01" placeholder="平倉權利金" oninput="updateEditIronTotals()">
+                </div>
+                <div class="iron-leg">
+                    <div class="iron-leg-title">CALL方</div>
+                    <input type="text" id="editIronPointB" class="form-control" placeholder="點位">
+                    <input type="number" id="editPremiumReceivedB" class="form-control tabular-nums" step="0.01" placeholder="開倉權利金" oninput="updateEditIronTotals()">
+                    <input type="date" id="editCloseDateB" class="form-control" title="平倉日" onclick="try{this.showPicker()}catch(e){}">
+                    <input type="number" id="editPremiumPaidB" class="form-control tabular-nums" step="0.01" placeholder="平倉權利金" oninput="updateEditIronTotals()">
+                </div>
+                <div style="grid-column: 1/-1; display:flex; justify-content:space-between; font-size:13px;">
+                    <span>總開倉: <strong id="editPremiumReceivedTotal" class="tabular-nums"></strong></span>
+                    <span>總平倉: <strong id="editPremiumPaidTotal" class="tabular-nums"></strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-footer" style="justify-content: space-between;">
+        <button class="btn btn-danger" onclick="confirmDeleteFromEdit()">刪除</button>
+        <div style="display: flex; gap: var(--space-12);">
+            <button class="btn btn-secondary" onclick="closeDialog('editDialog')">取消</button>
+            <button class="btn btn-primary" onclick="saveEditTrade()">儲存</button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="closeDialog">
+    <div class="dialog-header">
+        <div class="dialog-title">平倉結案</div>
+        <button class="btn-icon" onclick="closeDialog('closeDialog')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="dialog-content">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+            <div id="singleCloseFields" style="display: flex; flex-direction: column; gap: var(--space-16);">
+                <div class="form-group">
+                    <label class="form-label">結案日期 *</label>
+                    <input type="date" id="dialogCloseDate" class="form-control" required onclick="try{this.showPicker()}catch(e){}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">平倉權利金 *</label>
+                    <input type="number" id="dialogPremiumPaid" class="form-control tabular-nums" step="0.01" required>
+                </div>
+            </div>
+            
+            <div id="ironCloseFields" class="iron-condor-ui">
+                <div class="iron-leg">
+                    <div class="iron-leg-title">PUT方平倉</div>
+                    <input type="date" id="dialogCloseDateA" class="form-control" onclick="try{this.showPicker()}catch(e){}">
+                    <input type="number" id="dialogPremiumPaidA" class="form-control tabular-nums" step="0.01" placeholder="權利金" oninput="updateCloseIronTotal()">
+                </div>
+                <div class="iron-leg">
+                    <div class="iron-leg-title">CALL方平倉</div>
+                    <input type="date" id="dialogCloseDateB" class="form-control" onclick="try{this.showPicker()}catch(e){}">
+                    <input type="number" id="dialogPremiumPaidB" class="form-control tabular-nums" step="0.01" placeholder="權利金" oninput="updateCloseIronTotal()">
+                </div>
+                <div style="grid-column: 1/-1; text-align: right; font-size: 13px;">總平倉: <strong id="dialogPremiumPaidTotal" class="tabular-nums text-negative">$0.00</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">總手續費</label>
+                <input type="number" id="dialogFees" class="form-control tabular-nums" step="0.66" min="0" max="5.28" required>           
+            </div>
+        </div>
+    </div>
+    <div class="dialog-footer">
+        <button class="btn btn-secondary" onclick="closeDialog('closeDialog')">取消</button>
+        <button class="btn btn-primary" onclick="confirmCloseTrade()">確認平倉</button>
+    </div>
+</dialog>
+
+<dialog id="rollDialog">
+    <div class="dialog-header">
+        <div class="dialog-title">滾動單邊 <span id="rollLegLabel" style="font-size: 13px; color: var(--text-muted); font-weight: 400;"></span></div>
+        <button class="btn-icon" onclick="closeDialog('rollDialog')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="dialog-content">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label class="form-label">滾動日期 *</label>
+                <input type="date" id="rollDate" class="form-control" required onclick="try{this.showPicker()}catch(e){}">
+            </div>
+            <div class="form-group full" style="border-top: 1px dashed var(--border); padding-top: var(--space-16);">
+                <label class="form-label" style="color: var(--negative);">舊倉平倉權利金 *</label>
+                <input type="number" id="rollClosePremium" class="form-control tabular-nums" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="color: var(--positive);">新履約價 *</label>
+                <input type="text" id="rollNewPoint" class="form-control" placeholder="例: 560/565" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="color: var(--positive);">新收到權利金 *</label>
+                <input type="number" id="rollNewPremium" class="form-control tabular-nums" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">本次滾動總手續費</label>
+                <input type="number" id="rollFees" class="form-control tabular-nums" value="2.64" disabled>
+            </div>
+            <div class="form-group full" id="rollNotesGroup">
+                <label class="form-label">新倉備註</label>
+                <input type="text" id="rollNotes" class="form-control" placeholder="選填...">
+            </div>
+        </div>
+    </div>
+    <div class="dialog-footer">
+        <button class="btn btn-secondary" onclick="closeDialog('rollDialog')">取消</button>
+        <button class="btn btn-primary" onclick="confirmRollLeg()">確認滾動</button>
+    </div>
+</dialog>
+
+<dialog id="rollSelectDialog">
+    <div class="dialog-header">
+        <div class="dialog-title">選擇滾動邊</div>
+        <button class="btn-icon" onclick="closeDialog('rollSelectDialog')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="dialog-content" id="rollSelectContent" style="display: flex; flex-direction: column; gap: 12px;"></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    /* ==========================================================================
+       0. 版面刷新與觸控行為強化
+    ========================================================================== */
+    function refreshLayout() {
+        // iOS Safari 初次直向載入時 visualViewport.height 可能暫時偏小，
+        // 會讓整個 App 比實際可視區矮，底部因此露出一塊空白。
+        // 以 innerHeight / documentElement.clientHeight 為主，visualViewport 只作參考，
+        // 並取較大的有效高度，避免初始值把頁面縮短。
+        const vv = window.visualViewport;
+        const innerH = Math.round(window.innerHeight || 0);
+        const clientH = Math.round(document.documentElement.clientHeight || 0);
+        const vvH = vv ? Math.round(vv.height + (vv.offsetTop || 0)) : 0;
+        const h = Math.max(innerH, clientH, vvH);
+
+        if (h > 0) {
+            document.documentElement.style.setProperty('--app-height', `${h}px`);
+        }
+        void document.documentElement.offsetHeight;
+    }
+
+    function refreshLayoutBurst() {
+        refreshLayout();
+        requestAnimationFrame(refreshLayout);
+        setTimeout(refreshLayout, 80);
+        setTimeout(refreshLayout, 250);
+        setTimeout(refreshLayout, 600);
+    }
+
+    refreshLayoutBurst();
+
+    window.addEventListener('resize', refreshLayoutBurst, { passive: true });
+    window.addEventListener('orientationchange', refreshLayoutBurst, { passive: true });
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', refreshLayoutBurst, { passive: true });
+        window.visualViewport.addEventListener('scroll', refreshLayout, { passive: true });
+    }
+
+    function detectStandalone() {
+        const isStandaloneDisplayMode = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+        const isIOSStandalone = 'standalone' in window.navigator && window.navigator.standalone === true;
+        document.documentElement.classList.toggle('pwa-standalone', isStandaloneDisplayMode || isIOSStandalone);
+    }
+    detectStandalone();
+
+    function kickSafeAreaRecalc() {
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (!viewportMeta) return;
+        const original = viewportMeta.getAttribute('content');
+        if (!original) return;
+        viewportMeta.setAttribute('content', original + ', shrink-to-fit=yes');
+        requestAnimationFrame(() => {
+            viewportMeta.setAttribute('content', original);
+            refreshLayout();
+        });
+    }
+
+    window.addEventListener('load', () => {
+        kickSafeAreaRecalc();
+        setTimeout(kickSafeAreaRecalc, 300);
+    });
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) kickSafeAreaRecalc();
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            refreshLayout();
+            kickSafeAreaRecalc();
+        }
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener('touchstart', function (e) {
+        if (e.touches && e.touches[0]) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }
+    }, { passive: true });
+
+    const SCROLLABLE_SELECTOR = '#view-container, .nav-menu, .dialog-content, #trades-table-container, .table-container, textarea, input, select';
+    document.addEventListener('touchmove', function (e) {
+        if (!e.touches || !e.touches[0]) return;
+        
+        const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+        const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+
+        const isHorizontalScrollBox = e.target.closest('.table-container, #trades-table-container');
+        if (!isHorizontalScrollBox && deltaX > deltaY && deltaX > 8) {
+            e.preventDefault();
+            return;
+        }
+
+        if (!e.target.closest(SCROLLABLE_SELECTOR)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    /* ==========================================================================
+       1. 設定與常數
+    ========================================================================== */
+    let API_URL = "https://script.google.com/macros/s/AKfycbxDnzV-59TvA7UYXAm34OVDsyWf99Fgd_pPckqQT6w6rbGt2taZOoQwJHS4HqrgGrFw/exec";
+    let APP_SECRET = "";
+    let INITIAL_CASH = 10000;
+
+    let appSettings = {
+        name: '交易員',
+        capital: 10000, 
+        monthlyTargetRoc: 5,
+        apiUrl: 'https://script.google.com/macros/s/AKfycbxDnzV-59TvA7UYXAm34OVDsyWf99Fgd_pPckqQT6w6rbGt2taZOoQwJHS4HqrgGrFw/exec',
+        apiSecret: ''
+    };
+
+    /* ==========================================================================
+       2. 全域狀態
+    ========================================================================== */
+    let trades = [];
+    let closingId = null;
+    let editingId = null;
+    let currentSort = { key: 'date', asc: false }; 
+    let charts = { equity: null, monthly: null };
+    let globalStats = { 
+        realizedProfit: 0, 
+        closedCount: 0, 
+        winningCount: 0, 
+        unrealizedProfit: 0, 
+        reservedMargin: 0, 
+        monthStats: {}, 
+        yearStats: {}, 
+        symbolStats: {}, 
+        attention: [], 
+        flyingGroups: [],
+        closedGroups: []
+    };
+
+    /* ==========================================================================
+       3. 工具函式
+    ========================================================================== */
+    function saveAndRenderLocal() {
+        localStorage.setItem('trades_cache', JSON.stringify(trades));
+        updateAllViews();
+        refreshLayout();
+    }
+
+    function parseDate(dateStr) {
+        if (!dateStr) return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatMoney(num) {
+        if (isNaN(num) || num === '') return '-';
+        const n = parseFloat(num);
+        const f = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return n >= 0 ? `$${f}` : `-$${f}`;
+    }
+
+    function generateNextTradeId(offset = 0) {
+        const cy = new Date().getFullYear().toString().slice(-2); 
+        let maxId = 0;
+        trades.forEach(t => { 
+            if (t.tradeId) { 
+                let p = String(t.tradeId).split('-'); 
+                if (p.length === 2 && p[0] === cy) { 
+                    const num = parseInt(p[1]); 
+                    if (!isNaN(num) && num > maxId) maxId = num; 
+                } 
+            } 
+        });
+        return `${cy}-${maxId + 1 + offset}`;
+    }
+
+    function escapeHtml(str) {
+        if (str === undefined || str === null) return '';
+        return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function debounce(fn, wait = 300) { 
+        let t; 
+        return (...args) => { 
+            clearTimeout(t); 
+            t = setTimeout(() => fn(...args), wait); 
+        }; 
+    }
+
+    function showToast(message, type = 'success', duration = 3000) {
+        const activeDialog = document.querySelector('dialog[open]');
+        const container = activeDialog || document.getElementById('toast-container');
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        if (activeDialog) {
+            toast.style.position = 'fixed';
+            toast.style.top = '24px';
+            toast.style.right = '24px';
+            toast.style.bottom = 'auto';
+            toast.style.zIndex = '99999';
+        }
+        
+        const icon = type === 'error' ? 'error' : 'check_circle';
+        toast.innerHTML = `<span class="material-symbols-rounded">${icon}</span> <span>${message}</span>`;
+        container.appendChild(toast);
+        
+        setTimeout(() => { 
+            toast.classList.add('leaving'); 
+            setTimeout(() => toast.remove(), 300); 
+        }, duration);
+    }
+
+    function toggleLoading(show, text = "同步資料中...") { 
+        const loader = document.getElementById('global-loader');
+        document.getElementById('loader-text').textContent = text;
+        loader.style.display = show ? 'flex' : 'none'; 
+    }
+
+    /* ==========================================================================
+       4. API 與同步
+    ========================================================================== */
+    async function loadData(force = false) {
+        const cached = localStorage.getItem('trades_cache');
+        if (cached) { 
+            try { trades = JSON.parse(cached); updateAllViews(); } catch(e){} 
+        }
+        
+        setSyncStatus('syncing');
+        if(!cached) toggleLoading(true, "載入資料中...");
+        
+        try {
+            const response = await fetch(`${API_URL}?secret=${encodeURIComponent(APP_SECRET)}`);
+            const data = await response.json();
+            if (data && data.error) throw new Error(data.message);
+            
+            if(data.trades && data.settings) {
+                trades = data.trades;
+                
+                appSettings.name = data.settings.name || appSettings.name;
+                appSettings.capital = parseFloat(data.settings.capital) || appSettings.capital;
+                appSettings.monthlyTargetRoc = parseFloat(data.settings.monthlyTargetRoc) || appSettings.monthlyTargetRoc;
+                
+                document.getElementById('setting-name').value = appSettings.name;
+                document.getElementById('setting-capital').value = appSettings.capital;
+                document.getElementById('setting-monthly-target').value = appSettings.monthlyTargetRoc;
+                
+                localStorage.setItem('opTrackerSettings', JSON.stringify(appSettings));
+                INITIAL_CASH = appSettings.capital;
+            } else {
+                trades = data;
+            }
+
+            saveAndRenderLocal();
+            setSyncStatus('online');
+            if (force) showToast('已同步最新雲端資料');
+        } catch (e) {
+            setSyncStatus('offline');
+            showToast(cached ? '離線模式：目前使用本機快取資料' : '連線失敗', 'error');
+        } finally {
+            toggleLoading(false);
+        }
+    }
+
+    async function syncToServer(dataObj, onError) {
+        setSyncStatus('syncing');
+        try {
+            const fd = new URLSearchParams(); 
+            fd.append('secret', APP_SECRET);
+            for (const k in dataObj) fd.append(k, dataObj[k] === undefined ? '' : dataObj[k]);
+            const r = await fetch(API_URL, { method: 'POST', body: fd });
+            const d = await r.json();
+            if (!r.ok || !d.ok) throw new Error('Sync fail');
+            setSyncStatus('online');
+        } catch (e) {
+            setSyncStatus('offline');
+            showToast('雲端同步失敗，已還原變更', 'error');
+            if (onError) onError();
+        }
+    }
+
+    function setSyncStatus(status) {
+        const dot = document.getElementById('desktop-sync-dot');
+        const txt = document.getElementById('desktop-sync-text');
+        dot.className = 'sync-indicator ' + status;
+        
+        const time = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute:'2-digit' });
+        
+        if (status === 'online') txt.textContent = `已同步 · ${time}`;
+        else if (status === 'offline') txt.textContent = `離線模式 · ${time}`;
+        else txt.textContent = '同步中...';
+
+        const headerBtn = document.getElementById('header-sync-btn');
+        const headerIcon = document.getElementById('header-sync-icon');
+        
+        if (headerBtn && headerIcon) {
+            headerBtn.title = status === 'online' ? `已同步 · ${time}` : status === 'offline' ? `離線模式 · ${time}（點擊重試）` : '同步中...';
+            headerIcon.style.animation = status === 'syncing' ? 'spin 1s linear infinite' : 'none';
+            headerIcon.style.color = status === 'offline' ? 'var(--negative)' : status === 'syncing' ? 'var(--warning)' : 'var(--positive)';
+        }
+    }
+
+    /* ==========================================================================
+       5. 導航與主題
+    ========================================================================== */
+    const VIEW_TITLES = { 
+        'dashboard': '總覽 Dashboard', 
+        'positions': '持倉 Positions', 
+        'trades': '紀錄 Record', 
+        'performance': '績效 Performance', 
+        'settings': '系統設定 Settings' 
+    };
+
+    let currentView = 'dashboard';
+    let lastNonSettingsView = 'dashboard';
+
+    function navigate(viewId) {
+        if (currentView !== 'settings') lastNonSettingsView = currentView;
+        currentView = viewId;
+
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(el => el.classList.remove('active'));
+        
+        const targetSection = document.getElementById(`view-${viewId}`);
+        if(targetSection) targetSection.classList.add('active');
+        
+        document.querySelectorAll(`[data-target="${viewId}"]`).forEach(el => el.classList.add('active'));
+        document.getElementById('header-title').textContent = VIEW_TITLES[viewId] || '';
+
+        const settingsBtn = document.getElementById('header-settings-btn');
+        const closeBtn = document.getElementById('header-close-settings-btn');
+        if (settingsBtn) settingsBtn.classList.toggle('header-btn-hidden', viewId === 'settings');
+        if (closeBtn) closeBtn.classList.toggle('header-btn-hidden', viewId !== 'settings');
+        
+        if (viewId === 'dashboard' || viewId === 'performance') renderCharts();
+        
+        location.hash = viewId;
+        window.scrollTo(0,0);
+    }
+
+    function closeSettingsMobile() {
+        navigate(lastNonSettingsView || 'dashboard');
+    }
+
+    function initTheme() {
+        const saved = localStorage.getItem('theme_preference');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+    }
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme_preference', theme);
+        const headerIcon = document.getElementById('theme-icon-header');
+        if(headerIcon) headerIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        document.getElementById('theme-color-meta').content = theme === 'dark' ? '#0a0e1a' : '#f8fafc';
+        renderCharts();
+    }
+
+    /* ==========================================================================
+       6. 資料處理
+    ========================================================================== */
+    function isIronCondorType(typeStr) {
+        const s = String(typeStr || '').toUpperCase().replace(/\s+/g, '');
+        return s.includes('鐵鷹') || s.includes('IRONCONDOR') || s.includes('IRON-CONDOR');
+    }
+
+    function generateGroupTag() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+    function extractTag(notes, key) {
+        const m = String(notes || '').match(new RegExp('⟦' + key + ':([^⟧]+)⟧'));
+        return m ? m[1] : null;
+    }
+    function stripAllTags(notes) {
+        return String(notes || '').replace(/⟦[A-Za-z]+:[^⟧]*⟧\s*/g, '').trim();
+    }
+    function withTags(notes, tags) {
+        const clean = stripAllTags(notes);
+        let prefix = '';
+        if (tags && tags.G) prefix += `⟦G:${tags.G}⟧`;
+        if (tags && tags.S) prefix += `⟦S:${tags.S}⟧`;
+        if (!prefix) return clean;
+        return clean ? `${prefix} ${clean}` : prefix;
+    }
+    function orderPutCallPair(items) {
+        if (!items || items.length !== 2) return items;
+        const s0 = extractTag(items[0].notes, 'S'), s1 = extractTag(items[1].notes, 'S');
+        if (s0 === 'C' && s1 === 'P') return [items[1], items[0]];
+        return items;
+    }
+
+    function getLegCount(typeStr) {
+        if (isIronCondorType(typeStr)) return 4;
+        if (!typeStr) return 1;
+        const s = typeStr.toUpperCase();
+        if (s.includes('垂直') || s.includes('價差') || s.includes('跨式') || s.includes('勒式')) return 2;
+        return 1;
+    }
+
+    function getIronCondorKey(t) { 
+        const tag = extractTag(t.notes, 'G');
+        if (tag) return 'TAG|' + tag;
+        return [t.symbol || '', t.tradeType || '', parseDate(t.openDate), parseDate(t.expiryDate), String(t.margin ?? '')].join('|'); 
+    }
+
+    function getIronCondorGroupById(id) {
+        const target = trades.find(t => String(t.tradeId) === String(id));
+        if (!target || !isIronCondorType(target.tradeType)) return [target].filter(Boolean);
+        const key = getIronCondorKey(target);
+        const byIdAsc = (a, b) => String(a.tradeId).localeCompare(String(b.tradeId), undefined, { numeric: true });
+        const allSame = trades.filter(t => isIronCondorType(t.tradeType) && getIronCondorKey(t) === key);
+
+        if (allSame.length <= 2) {
+            allSame.sort(byIdAsc);
+            return orderPutCallPair(allSame);
+        }
+
+        const others = allSame.filter(t => String(t.tradeId) !== String(target.tradeId));
+        const openOthers = others.filter(t => !t.closeDate);
+        const partner = openOthers[0] || others.sort((a, b) => String(b.tradeId).localeCompare(String(a.tradeId), undefined, { numeric: true }))[0];
+        const group = [target, partner].filter(Boolean).sort(byIdAsc);
+        return orderPutCallPair(group);
+    }
+
+    function bucketToGroups(bucket) {
+        const byIdAsc = (a, b) => String(a.tradeId).localeCompare(String(b.tradeId), undefined, { numeric: true });
+        if (bucket.length <= 1) return bucket.map(t => ({ items: [t], isIron: false }));
+        if (bucket.length === 2) {
+            const items = bucket.slice().sort(byIdAsc);
+            return [{ items: orderPutCallPair(items), isIron: true }];
+        }
+
+        const groups = [];
+        const open = bucket.filter(t => !t.closeDate);
+        const closed = bucket.filter(t => !!t.closeDate);
+
+        if (open.length === 2) {
+            groups.push({ items: orderPutCallPair(open.slice().sort(byIdAsc)), isIron: true });
+        } else {
+            open.forEach(t => groups.push({ items: [t], isIron: false }));
+        }
+
+        const usedClosed = new Set();
+        for (let i = 0; i < closed.length; i++) {
+            if (usedClosed.has(i)) continue;
+            let paired = false;
+            for (let j = i + 1; j < closed.length; j++) {
+                if (usedClosed.has(j)) continue;
+                if (parseDate(closed[i].closeDate) && parseDate(closed[i].closeDate) === parseDate(closed[j].closeDate)) {
+                    groups.push({ items: orderPutCallPair([closed[i], closed[j]].sort(byIdAsc)), isIron: true });
+                    usedClosed.add(i); usedClosed.add(j);
+                    paired = true;
+                    break;
+                }
+            }
+            if (!paired) groups.push({ items: [closed[i]], isIron: false });
+        }
+        return groups;
+    }
+
+    function buildDisplayGroups(dataList = trades) {
+        const groups = []; 
+        const used = new Set(); 
+        const ironBuckets = new Map();
+        
+        dataList.forEach(t => {
+            if (isIronCondorType(t.tradeType)) {
+                const key = getIronCondorKey(t);
+                if (!ironBuckets.has(key)) ironBuckets.set(key, []);
+                ironBuckets.get(key).push(t);
+            }
+        });
+        
+        ironBuckets.forEach(b => b.sort((a, b) => String(a.tradeId).localeCompare(String(b.tradeId), undefined, { numeric: true })));
+        
+        dataList.forEach(t => {
+            if (used.has(String(t.tradeId))) return;
+            if (isIronCondorType(t.tradeType)) {
+                const key = getIronCondorKey(t);
+                const bucket = ironBuckets.get(key) || [];
+                bucket.forEach(x => used.add(String(x.tradeId)));
+                bucketToGroups(bucket).forEach(g => groups.push(g));
+            } else {
+                used.add(String(t.tradeId)); 
+                groups.push({ items: [t], isIron: false });
+            }
+        });
+        return groups;
+    }
+
+    function encodePointNotes(point, note) {
+        const p = String(point || '').trim(); 
+        const n = String(note || '').trim();
+        if (!p && !n) return ''; 
+        return `【點位】${p}【備註】${n}`;
+    }
+
+    function decodePointNotes(raw, isIron = false) {
+        const value = String(raw || ''); 
+        const match = value.match(/^【點位】([\s\S]*?)【備註】([\s\S]*)$/);
+        if (match) return { point: match[1].trim(), note: match[2].trim() };
+        if (isIron) return { point: value.trim(), note: '' }; 
+        return { point: '', note: value.trim() }; 
+    }
+
+    function getTradeNote(t, isIron = false) {
+        if (!t) return '';
+        if (t.point !== undefined) return stripAllTags(t.notes);
+        return decodePointNotes(t.notes, isIron).note;
+    }
+    function getTradePoint(t, isIron = false) {
+        if (!t) return '';
+        if (t.point !== undefined) return String(t.point || '').trim();
+        return decodePointNotes(t.notes, isIron).point;
+    }
+
+    function calculateGlobalStats() {
+        globalStats = { 
+            realizedProfit: 0, 
+            closedCount: 0, 
+            winningCount: 0, 
+            unrealizedProfit: 0, 
+            reservedMargin: 0, 
+            monthStats: {}, 
+            yearStats: {}, 
+            symbolStats: {}, 
+            attention: [], 
+            flyingGroups: [],
+            closedGroups: [] 
+        };
+        const groups = buildDisplayGroups(trades);
+        const now = Date.now();
+        
+        groups.forEach(g => {
+            const items = g.items; 
+            const first = items[0];
+            const openD = parseDate(first.openDate); 
+            const expiryD = parseDate(first.expiryDate);
+            const allReceived = items.every(t => t.premiumReceived !== '' && !isNaN(parseFloat(t.premiumReceived)));
+            const allPaid = items.every(t => t.premiumPaid !== '' && !isNaN(parseFloat(t.premiumPaid)));
+            const totalReceived = items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0), 0);
+            const totalPaid = items.reduce((s, t) => s + (parseFloat(t.premiumPaid) || 0), 0);
+            const totalFees = items.reduce((s, t) => s + (parseFloat(t.fees) || 0), 0);
+            const isClosed = allReceived && allPaid;
+            const profit = totalReceived - totalPaid - totalFees;
+            
+            g.pnl = profit; 
+            
+            let daysLeft = expiryD ? Math.ceil((new Date(expiryD).getTime() - now)/86400000) : null;
+            
+            if (isClosed && first.tradeId !== '歷史累積') {
+                globalStats.realizedProfit += profit;
+                globalStats.closedCount++;
+                if (profit > 0) globalStats.winningCount++;
+                globalStats.closedGroups.push(g); 
+                
+                const sym = first.symbol || '未分類';
+                globalStats.symbolStats[sym] = (globalStats.symbolStats[sym] || 0) + profit;
+                
+                const closeDates = items.map(t => parseDate(t.closeDate)).filter(Boolean).sort();
+                const statDate = closeDates[closeDates.length - 1] || openD;
+                if (statDate && statDate.length >= 7) {
+                    const ym = statDate.substring(0, 7); 
+                    const y = statDate.substring(0, 4);
+                    globalStats.monthStats[ym] = (globalStats.monthStats[ym] || 0) + profit;
+                    globalStats.yearStats[y] = (globalStats.yearStats[y] || 0) + profit;
+                }
+            } else if (allReceived && first.tradeId !== '歷史累積') {
+                globalStats.unrealizedProfit += (totalReceived - totalFees);
+                globalStats.reservedMargin += (parseFloat(first.margin) || 0);
+                globalStats.flyingGroups.push(g);
+                if (daysLeft !== null && daysLeft <= 7) {
+                    let reason = daysLeft < 0 ? '已到期' : (daysLeft === 0 ? '今日到期' : `剩餘 ${daysLeft} 天`);
+                    globalStats.attention.push({ group: g, reason: reason });
+                }        
+            }
+        });
+        
+        globalStats.flyingGroups.sort((a, b) => new Date(b.items[0].openDate).getTime() - new Date(a.items[0].openDate).getTime());
+    }
+
+    /* ==========================================================================
+       7. 畫面渲染
+    ========================================================================== */
+    function updateAllViews() {
+        calculateGlobalStats();
+        renderDashboard();
+        renderPositions();
+        renderTrades();
+        renderPerformance();
+        renderAIGreeting(); 
+    }
+
+    function renderDashboard() {
+        document.getElementById('dash-equity').textContent = formatMoney(INITIAL_CASH + globalStats.realizedProfit);
+        document.getElementById('dash-pnl').textContent = formatMoney(globalStats.realizedProfit);
+        document.getElementById('dash-pnl').className = `kpi-value tabular-nums ${globalStats.realizedProfit >= 0 ? 'text-positive' : 'text-negative'}`;
+        
+        const currentYear = new Date().getFullYear().toString();
+        const currentYearProfit = globalStats.yearStats[currentYear] || 0;
+        
+        const initialCapStr = formatMoney(typeof appSettings !== 'undefined' ? appSettings.capital : 10000);
+        document.getElementById('dash-initial-capital').textContent = `初始資金 ${initialCapStr}`;
+        
+        let previousProfit = 0;
+        Object.keys(globalStats.yearStats).forEach(y => { if (y < currentYear) previousProfit += globalStats.yearStats[y]; });
+        const yearPrincipal = INITIAL_CASH + previousProfit;
+        const currentYearRoc = yearPrincipal > 0 ? ((currentYearProfit / yearPrincipal) * 100).toFixed(1) : '0.0';
+        
+        document.getElementById('dash-roc').textContent = `本年度 ROC ${currentYearRoc}%`;    
+        document.getElementById('dash-unrealized').textContent = formatMoney(globalStats.unrealizedProfit);
+        document.getElementById('dash-unrealized').className = `kpi-value tabular-nums text-info`;
+        document.getElementById('dash-margin').textContent = formatMoney(globalStats.reservedMargin);
+        document.getElementById('dash-winrate').textContent = globalStats.closedCount ? `${((globalStats.winningCount/globalStats.closedCount)*100).toFixed(1)}%` : '0.0%';
+        document.getElementById('dash-closed-count').textContent = `已結案 ${globalStats.closedCount} 筆`;
+        
+        const currentEquity = INITIAL_CASH + globalStats.realizedProfit; 
+        const marginUsage = currentEquity > 0 ? (globalStats.reservedMargin / currentEquity) * 100 : 0;
+        
+        const textEl = document.getElementById('margin-usage-text');
+        const safeTextEl = document.getElementById('margin-safe-text');
+        const ctxGauge = document.getElementById('marginGaugeChart');
+
+        if (textEl && safeTextEl && ctxGauge) {
+            textEl.textContent = marginUsage.toFixed(1) + '%';
+            
+            let chartColor = 'var(--positive)';
+            if (marginUsage < 25) {
+                safeTextEl.innerHTML = '水位健康 🌱 資金彈性非常充足。';
+                textEl.style.color = 'var(--positive)';
+            } else if (marginUsage < 50) {
+                chartColor = 'var(--info)';
+                safeTextEl.innerHTML = '水位適中 🌊 穩健前行，請繼續保持。';
+                textEl.style.color = 'var(--info)';
+            } else if (marginUsage < 75) {
+                chartColor = 'var(--warning)';
+                safeTextEl.innerHTML = '水位偏高 ⚠️ 留意市場波動，請留意新建倉保證金。';
+                textEl.style.color = 'var(--warning)';
+            } else {
+                chartColor = 'var(--negative)';
+                safeTextEl.innerHTML = '水位警戒 🚨 資金已接近上限！請嚴格控管風險。';
+                textEl.style.color = 'var(--negative)';
+            }
+
+            if (window.myGaugeChart) window.myGaugeChart.destroy();
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+            const validUsage = Math.min(marginUsage, 100);
+            const remainUsage = Math.max(0, 100 - validUsage);
+
+            window.myGaugeChart = new Chart(ctxGauge, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [validUsage, remainUsage],
+                        backgroundColor: [
+                            getComputedStyle(document.documentElement).getPropertyValue(chartColor.replace('var(', '').replace(')', '')).trim() || chartColor, 
+                            trackColor
+                        ],
+                        borderWidth: 0,
+                        borderRadius: [4, 0] 
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    circumference: 180, 
+                    rotation: -90,      
+                    cutout: '82%',      
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    animation: { animateScale: true }
+                }
+            });
+        }
+
+        const monthlyProfitEl = document.getElementById('monthly-profit-text');
+        const monthlyTargetEl = document.getElementById('monthly-target-text');
+        const monthlyFillEl = document.getElementById('monthly-progress-fill');
+        const monthlyStatusEl = document.getElementById('monthly-status-text');
+
+        if (monthlyProfitEl) {
+            const now = new Date();
+            let currentMonthProfit = 0;
+            
+            globalStats.closedGroups.forEach(g => {
+                let latestClose = '';
+                g.items.forEach(item => {
+                    if (item.closeDate && (!latestClose || item.closeDate > latestClose)) {
+                        latestClose = item.closeDate;
+                    }
+                });
+                if (latestClose) {
+                    const dateObj = new Date(latestClose);
+                    if (dateObj.getMonth() === now.getMonth() && dateObj.getFullYear() === now.getFullYear()) {
+                        currentMonthProfit += (g.pnl || 0);
+                    }
+                }
+            });
+
+            let previousProfit = 0;
+            const currentMonthPrefix = now.toISOString().slice(0, 7); 
+            Object.keys(globalStats.monthStats).forEach(m => {
+                if (m < currentMonthPrefix) {
+                    previousProfit += globalStats.monthStats[m];
+                }
+            });
+            
+            const monthOpeningCapital = INITIAL_CASH + previousProfit;
+            const targetPercent = (typeof appSettings !== 'undefined' && appSettings.monthlyTargetRoc !== undefined) ? appSettings.monthlyTargetRoc : 5;
+            const targetAmt = monthOpeningCapital * (targetPercent / 100);
+            
+            const progress = targetAmt > 0 ? (currentMonthProfit / targetAmt) * 100 : 0;
+            const boundedProgress = Math.min(Math.max(progress, 0), 100); 
+            
+            monthlyProfitEl.textContent = formatMoney(currentMonthProfit);
+            monthlyProfitEl.style.color = currentMonthProfit >= 0 ? 'var(--text-primary)' : 'var(--negative)';
+            
+            monthlyTargetEl.textContent = `目標 ${formatMoney(targetAmt)} (${targetPercent}%)`;
+            
+            const fillEl = document.getElementById('monthly-progress-fill');
+            const percentEl = document.getElementById('monthly-percent-text');
+            
+            const displayPercent = Math.max(0, progress);
+            if (percentEl) {
+                percentEl.textContent = `${displayPercent.toFixed(1)}%`;
+            }
+            
+            setTimeout(() => {
+                if (fillEl) fillEl.style.width = `${boundedProgress}%`;
+            }, 100);
+        
+            let barColor = 'var(--accent)'; 
+            
+            if (currentMonthProfit < 0) {
+                barColor = 'var(--border)'; 
+                if (fillEl) fillEl.style.width = '0%';
+                monthlyStatusEl.innerHTML = '稍微遇上逆風了，耐心等待下一個好球帶。';
+            } else if (progress >= 100) {
+                barColor = 'var(--positive)'; 
+                monthlyStatusEl.innerHTML = '本月目標已達成，可以放慢腳步好好休息了 ☕️';
+            } else if (progress >= 50) {
+                barColor = 'var(--info)'; 
+                monthlyStatusEl.innerHTML = `進度過半，還差 ${formatMoney(targetAmt - currentMonthProfit)}，保持穩健步調。`;
+            } else {
+                monthlyStatusEl.innerHTML = '按照自己的節奏，慢慢累積。';
+            }
+
+            if (fillEl) fillEl.style.background = barColor;
+        }
+    }
+
+    function renderPositions() {
+        const filter = document.getElementById('pos-filter').value.toUpperCase();
+        const sortVal = 'expiry_asc';
+        let display = [...globalStats.flyingGroups];
+
+        display.sort((a, b) => {
+            const tA = a.items[0], tB = b.items[0];
+            if (sortVal.startsWith('expiry')) {
+                const dA = tA.expiryDate ? new Date(tA.expiryDate).getTime() : Infinity;
+                const dB = tB.expiryDate ? new Date(tB.expiryDate).getTime() : Infinity;
+                return sortVal === 'expiry_asc' ? dA - dB : dB - dA;
+            }
+            
+            if (sortVal.startsWith('date')) {
+                const dA = new Date(tA.openDate || '1970').getTime();
+                const dB = new Date(tB.openDate || '1970').getTime();
+                return sortVal === 'date_asc' ? dA - dB : dB - dA;
+            } else if (sortVal.startsWith('profit')) {
+                const pA = a.items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0) - (parseFloat(t.fees) || 0), 0);
+                const pB = b.items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0) - (parseFloat(t.fees) || 0), 0);
+                return sortVal === 'profit_asc' ? pA - pB : pB - pA;
+            } else if (sortVal.startsWith('symbol')) {
+                const sA = (tA.symbol || '').toUpperCase();
+                const sB = (tB.symbol || '').toUpperCase();
+                return sortVal === 'symbol_asc' ? sA.localeCompare(sB) : sB.localeCompare(sA);
+            }
+            return 0;
+        });
+
+        if (filter) {
+            display = display.filter(g => {
+                const t = g.items[0];
+                return (t.symbol || '').toUpperCase().includes(filter) || (t.tradeType || '').toUpperCase().includes(filter);
+            });
+        }
+        
+        document.getElementById('pos-summary').textContent = `共 ${display.length} 筆持倉`;
+        document.getElementById('positions-grid').innerHTML = display.map(g => generateTradeCardHtml(g)).join('') || '<div class="empty-state" style="grid-column:1/-1;">目前沒有符合條件的持倉</div>';
+    }
+
+    const debouncedRenderTrades = debounce(renderTrades, 300);
+
+    function sortTrades(key) {
+        if(currentSort.key === key) currentSort.asc = !currentSort.asc;
+        else { currentSort.key = key; currentSort.asc = false; }
+        renderTrades();
+    }
+
+    function handleMobileTradesSort(val) {
+        const parts = val.split('_');
+        currentSort.key = parts[0];
+        currentSort.asc = (parts[1] === 'asc');
+        renderTrades();
+    }
+
+    function renderTrades() {
+        let list = [...trades];
+        const search = document.getElementById('trades-search').value.toLowerCase();
+        
+        list.sort((a, b) => {
+            let vA, vB;
+            if (currentSort.key === 'tradeId') { 
+                vA = parseInt((a.tradeId || '').split('-')[1] || 0); 
+                vB = parseInt((b.tradeId || '').split('-')[1] || 0); 
+            } else if (currentSort.key === 'date') { 
+                vA = new Date(a.openDate || '1970').getTime(); 
+                vB = new Date(b.openDate || '1970').getTime(); 
+            } else if (currentSort.key === 'symbol') { 
+                vA = (a.symbol || '').toUpperCase(); 
+                vB = (b.symbol || '').toUpperCase(); 
+            } else if (currentSort.key === 'profit') { 
+                vA = parseFloat(a.premiumReceived) - parseFloat(a.premiumPaid || 0) - parseFloat(a.fees || 0); 
+                vB = parseFloat(b.premiumReceived) - parseFloat(b.premiumPaid || 0) - parseFloat(b.fees || 0); 
+            }
+            if(vA < vB) return currentSort.asc ? -1 : 1;
+            if(vA > vB) return currentSort.asc ? 1 : -1;
+            return 0;
+        });
+
+        const groups = buildDisplayGroups(list);
+        let htmlDesk = '', htmlMob = '';
+        
+        let filteredProfit = 0;
+        let matchCount = 0;
+        
+        groups.forEach(g => {
+            const first = g.items[0];
+            if (first.tradeId === '歷史累積') return;
+            
+            const isClosed = g.items.every(t => t.premiumReceived !== '' && t.premiumPaid !== '' && !isNaN(parseFloat(t.premiumPaid)));
+            const totalReceived = g.items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0), 0);
+            const totalPaid = g.items.reduce((s, t) => s + (parseFloat(t.premiumPaid) || 0), 0);
+            const totalFees = g.items.reduce((s, t) => s + (parseFloat(t.fees) || 0), 0);
+            const profit = totalReceived - totalPaid - totalFees;
+
+            const closeDateObj = first.closeDate ? new Date(first.closeDate) : null;
+            const closeMonth = closeDateObj ? (closeDateObj.getMonth() + 1) : '';
+            const closeYear = closeDateObj ? closeDateObj.getFullYear() : '';
+            const closeYYYYMM = closeDateObj ? `${closeYear}${String(closeMonth).padStart(2, '0')}` : '';
+            const openDateObj = first.openDate ? new Date(first.openDate) : null;
+            const openYYYYMM = openDateObj ? `${openDateObj.getFullYear()}${String(openDateObj.getMonth() + 1).padStart(2, '0')}` : '';
+            const dateTags = closeMonth ? `${closeMonth}月 ${closeMonth}月份 ${closeYear}年 ${closeYear}年${closeMonth}月 ${closeYYYYMM} ${openYYYYMM}` : openYYYYMM;
+
+            const profitTag = isClosed ? (profit >= 0 ? '獲利單 賺錢' : '虧損單 賠錢') : '';
+            const searchStr = `${first.tradeId} ${first.symbol} ${first.tradeType} ${first.openDate} ${first.closeDate} ${dateTags} ${profitTag} ${getTradeNote(first, g.isIron)}`.toLowerCase();
+
+            if (search) {
+                const normalizedSearch = search.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xfee0));
+                const searchTerms = normalizedSearch.trim().toLowerCase().split(/\s+/);
+                const isMatch = searchTerms.every(term => searchStr.includes(term));
+                if (!isMatch) return;
+            }
+
+            if (!isClosed) return; 
+
+            filteredProfit += profit;
+            matchCount++;
+
+            htmlDesk += generateTableRowHtml(g, isClosed);
+            htmlMob += generateTradeCardHtml(g);
+        });
+        
+        document.getElementById('trades-table-body').innerHTML = htmlDesk || '<tr><td colspan="6" style="text-align:center;padding:40px;">沒有符合的交易</td></tr>';
+        document.getElementById('trades-mobile-container').innerHTML = htmlMob || '<div class="empty-state">沒有符合的交易</div>';
+        
+        const summaryBadge = document.getElementById('trades-summary-badge');
+        const summaryPnl = document.getElementById('trades-summary-pnl');
+        if (search && matchCount > 0 && summaryBadge && summaryPnl) {
+            summaryBadge.style.display = 'flex';
+            summaryPnl.textContent = formatMoney(filteredProfit);
+            summaryPnl.className = `tabular-nums ${filteredProfit >= 0 ? 'text-positive' : 'text-negative'}`;
+        } else if (summaryBadge) {
+            summaryBadge.style.display = 'none';
+        }
+        
+        document.querySelectorAll('#trades-table-container th').forEach(th => th.classList.remove('active-sort'));
+        const ths = document.querySelectorAll('#trades-table-container th');
+        if (currentSort.key === 'tradeId') ths[0].classList.add('active-sort');
+        if (currentSort.key === 'date') ths[1].classList.add('active-sort');
+        if (currentSort.key === 'symbol') ths[2].classList.add('active-sort');
+        if (currentSort.key === 'profit') ths[4].classList.add('active-sort');
+    }
+
+    function renderPerformance() {
+        let runningBalance = INITIAL_CASH;
+        const sortedMonthsAsc = Object.keys(globalStats.monthStats).sort((a,b) => a.localeCompare(b));
+        let monthOpening = {};
+        
+        sortedMonthsAsc.forEach(m => {
+            monthOpening[m] = runningBalance;
+            runningBalance += globalStats.monthStats[m];
+        });
+
+        const yearGroups = {};
+        sortedMonthsAsc.forEach(m => {
+            const y = m.substring(0, 4);
+            if (!yearGroups[y]) yearGroups[y] = [];
+            yearGroups[y].push(m);
+        });
+
+        let mHtml = '';
+        Object.keys(yearGroups).sort((a, b) => b.localeCompare(a)).forEach(y => {
+            const yProfit = globalStats.yearStats[y] || 0;
+            const firstMonth = yearGroups[y][0];
+            const yPrincipal = monthOpening[firstMonth] || INITIAL_CASH;
+            const yRoc = yPrincipal > 0 ? ((yProfit/yPrincipal)*100).toFixed(2) : '-';
+
+            mHtml += `
+            <details class="year-accordion" open>
+                <summary class="stat-year-header">
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <span class="material-symbols-rounded expand-icon">chevron_right</span>
+                        <strong>${y}年度</strong>
+                    </div>
+                    <span class="${yProfit >= 0 ? 'text-positive' : 'text-negative'}" style="font-weight:700;">
+                        ${formatMoney(yProfit)} 
+                        <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">(投報率 ${yRoc}%)</span>
+                    </span>
+                </summary>
+                <div class="year-accordion-content">`;
+
+            const monthsDesc = [...yearGroups[y]].reverse();
+            monthsDesc.forEach(m => {
+                const profit = globalStats.monthStats[m];
+                const principal = monthOpening[m];
+                const roc = principal > 0 ? ((profit / principal) * 100).toFixed(2) : '-';
+                const displayMonth = m.includes('歷史') ? '歷史累積' : m.split('-')[1] + '月';
+                
+                mHtml += `
+                <div class="stat-row" style="padding-left: 28px;">
+                    <div>
+                        <strong style="color:var(--text-secondary);">${displayMonth}</strong> 
+                        <span style="font-size:11px;color:var(--text-muted);">(投報率 ${roc}%)</span>
+                    </div>
+                    <strong class="${profit >= 0 ? 'text-positive' : 'text-negative'}">${formatMoney(profit)}</strong>
+                </div>`;
+            });
+            
+            mHtml += `</div></details>`;
+        });
+
+        document.getElementById('perf-monthly').innerHTML = mHtml || '<div class="empty-state" style="padding: 20px;">無資料</div>';
+
+        let symHtml = '';
+        Object.entries(globalStats.symbolStats).sort((a, b) => b[1] - a[1]).slice(0, 10).forEach(([name, pnl]) => {
+            symHtml += `<div class="stat-row"><strong>${name}</strong><strong class="${pnl >= 0 ? 'text-positive' : 'text-negative'}">${formatMoney(pnl)}</strong></div>`;
+        });
+        document.getElementById('perf-symbol').innerHTML = symHtml || '<div class="empty-state" style="padding: 20px;">無資料</div>';
+    }
+
+    function renderCharts() {
+        if (typeof Chart === 'undefined') return;
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
+        Chart.defaults.font.family = getComputedStyle(document.documentElement).getPropertyValue('--font-sans').trim() || "'Plus Jakarta Sans', 'Noto Sans TC', sans-serif";
+
+        const ctx = document.getElementById('combinedChart');
+        if (!ctx) return;
+
+        if (window.myCombinedChart) {
+            window.myCombinedChart.destroy();
+        }
+
+        const labels = Object.keys(globalStats.monthStats).sort();
+        const monthlyPnL = labels.map(m => globalStats.monthStats[m]);
+
+        let cumulative = 0;
+        const equityCurve = monthlyPnL.map(pnl => {
+            cumulative += pnl;
+            return cumulative;
+        });
+
+        window.myCombinedChart = new Chart(ctx, {
+            type: 'bar', 
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'line', 
+                        label: '累計獲利 (右軸)',
+                        data: equityCurve,
+                        borderColor: '#f5b549', 
+                        backgroundColor: '#f5b549',
+                        borderWidth: 3,
+                        tension: 0.3, 
+                        pointRadius: 4,
+                        yAxisID: 'y1' 
+                    },
+                    {
+                        type: 'bar', 
+                        label: '單月損益 (左軸)',
+                        data: monthlyPnL,
+                        backgroundColor: monthlyPnL.map(v => v >= 0 ? 'rgba(34, 197, 94, 0.7)' : 'rgba(239, 68, 68, 0.7)'),
+                        borderRadius: 4,
+                        yAxisID: 'y' 
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { 
+                    mode: 'index', 
+                    intersect: false 
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: '單月損益 ($)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: '累計獲利 ($)' },
+                        grid: { drawOnChartArea: false } 
+                    }
+                }
+            }
+        });
+    }
+
+    function renderAIGreeting() {
+        const myName = typeof appSettings !== 'undefined' ? appSettings.name : "交易員";    
+        const hour = new Date().getHours();
+        let greetingTime = '';
+        
+        if (hour >= 5 && hour < 12) {
+            greetingTime = '早安';
+        } else if (hour >= 12 && hour < 18) {
+            greetingTime = '午安';
+        } else if (hour >= 18 && hour < 23) {
+            greetingTime = '晚安';
+        } else {
+            greetingTime = '夜深了，還在盯盤嗎';
+        }
+
+        let expiringText = '';
+        if (globalStats.attention && globalStats.attention.length > 0) {
+            const symbols = globalStats.attention.map(a => a.group.items[0].symbol).join('、');
+            expiringText = `提醒您，手上的 <strong>${symbols}</strong> 即觸及到期結算，請留意後續佈局。`;
+        } else {
+            expiringText = `目前手上沒有即將到期的危險部位，可以安心休息或尋找新機會。`;
+        }
+
+        const quotes = [
+            "交易是一場馬拉松，保持紀律就是最好的策略！",
+            "市場永遠都在，耐心等待屬於你的完美打擊區。",
+            "控制風險永遠擺在第一位，獲利自然會隨之而來。",
+            "順勢而為，保持心態平穩，今天也是充滿希望的一天！",
+            "每一次的交易都是學習，讓我們穩步朝財務自由邁進。"
+        ];
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+        const msgContainer = document.getElementById('ai-message-content');
+        if (msgContainer) {
+            msgContainer.innerHTML = `
+                <p style="font-size: 1.15em; margin-bottom: 8px;"><strong>${greetingTime}，${myName}！</strong></p>
+                <p>${expiringText}</p>
+                <p style="margin-top: 10px;">💡 ${randomQuote}</p>
+            `;
+        }
+    }
+
+    function generateTradeCardHtml(g) {
+        const first = g.items[0]; 
+        const isIron = g.isIron;
+        const totalReceived = g.items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0), 0);
+        const totalPaid = g.items.reduce((s, t) => s + (parseFloat(t.premiumPaid) || 0), 0);
+        const totalFees = g.items.reduce((s, t) => s + (parseFloat(t.fees) || 0), 0);
+        const isClosed = g.items.every(t => t.premiumPaid !== '' && !isNaN(parseFloat(t.premiumPaid)));
+        const profit = totalReceived - totalPaid - totalFees;
+        
+        let daysLeft = first.expiryDate ? Math.ceil((new Date(first.expiryDate).getTime() - Date.now())/86400000) : null;
+        let badge = '';
+        
+        if (isClosed) {
+            badge = `<div class="badge badge-closed-${profit >= 0 ? 'profit' : 'loss'}" style="font-size: 14px; padding: 5px 10px;"><span class="material-symbols-rounded" style="font-size: 18px;">${profit >= 0 ? 'sentiment_satisfied' : 'sentiment_dissatisfied'}</span>${profit >= 0 ? '獲利' : '虧損'}</div>`;
+        } else {
+            let badgeContent = '飛行中';
+            let badgeClass = 'badge-flying';
+            let badgeIcon = 'flight_takeoff';
+
+            if (daysLeft !== null) {
+                if (daysLeft < 0) {
+                    badgeContent = '已到期';
+                    badgeClass = 'badge-attention'; 
+                    badgeIcon = 'published_with_changes'; 
+                } else if (daysLeft === 0) {
+                    badgeContent = '今日到期！';
+                    badgeClass = 'badge-danger';
+                    badgeIcon = 'warning';
+                } else if (daysLeft <= 7) {
+                    badgeContent = `飛行中，倒數 ${daysLeft} 天`;
+                    badgeClass = 'badge-danger';
+                } else {
+                    badgeContent = `飛行中，倒數 ${daysLeft} 天`;
+                }
+            }
+            
+            badge = `<div class="badge ${badgeClass}" style="font-size: 12px; padding: 4px 8px;"><span class="material-symbols-rounded" style="font-size: 16px;">${badgeIcon}</span> ${badgeContent}</div>`;
+        }
+            
+        const pointStr = isIron ? g.items.map(x => `(${escapeHtml(getTradePoint(x, true))})`).join(' ⇋ ') : escapeHtml(getTradePoint(first, false));
+        const typeUpper = (first.tradeType || '').toUpperCase().trim();
+        let strategyDisplay = '';
+        
+        if (['SC', 'SP', 'BC', 'BP'].includes(typeUpper) && !isIron) {
+            strategyDisplay = `${escapeHtml(first.tradeType)} ${pointStr}`; 
+        } else {
+            let displayPoint = (!isIron && pointStr) ? `(${pointStr})` : pointStr;
+            strategyDisplay = `${escapeHtml(first.tradeType)} ${displayPoint}`;
+        }
+
+        const rocVal = (isClosed && first.margin > 0) ? ((profit / first.margin) * 100).toFixed(2) + '%' : '';
+        const rocHtml = rocVal ? `<div class="roc-pill">${rocVal}</div>` : '';
+
+        let closedDisplayHtml = '';
+        if (isClosed) {
+            const pClass = profit >= 0 ? 'text-positive' : 'text-negative';
+            closedDisplayHtml = `
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <div class="${pClass}" style="font-size: clamp(19px, 2vw, 22px); font-weight: 800; font-family: var(--font-mono); line-height: 1.2;">
+                        ${formatMoney(profit)}
+                    </div>
+                    ${rocHtml}
+                </div>
+            `;
+        }
+
+        const notes = escapeHtml(getTradeNote(first, isIron));
+        let notesHtml = '';
+        if (notes || isClosed) {
+            let noteText = notes || '';
+            if (isClosed && !notes) noteText = '[已結案]';
+            notesHtml = `<div class="tc-note-box"><span class="material-symbols-rounded" style="font-size:16px;">description</span> ${noteText}</div>`;
+        }
+
+        let targetProfit = totalReceived * 0.6;
+        let expectedProfitHtml = !isClosed ? `
+            <div style="text-align: right;">
+                <div style="font-size: clamp(19px, 2vw, 22px); font-weight: 800; font-family: var(--font-mono); color: #94a3b8; line-height: 1.2;">
+                    ${formatMoney(targetProfit)}
+                </div>
+                <div style="font-size: 13px; color: #94a3b8; font-weight: 500; line-height: 1.4; margin-top: 4px;">
+                    預計收益
+                </div>
+            </div>
+        ` : '';
+
+        let actionHtml = `
+            <div style="display: flex; gap: 8px; margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; align-items: center; justify-content: space-between;">
+                <button class="btn btn-secondary" style="flex: 1; height: 32px; font-size: 13px; padding: 0; min-width: 0; border: 1px solid var(--border); background: transparent; white-space: nowrap;" onclick="duplicateTrade('${first.tradeId}')">
+                    <span class="material-symbols-rounded" style="font-size: 15px;">content_copy</span> 複製
+                </button>
+                
+                <button class="btn btn-secondary" style="flex: 1; height: 32px; font-size: 13px; padding: 0; min-width: 0; border: 1px solid var(--border); background: transparent; white-space: nowrap;" onclick="openEditDialog('${first.tradeId}')">
+                    <span class="material-symbols-rounded" style="font-size: 15px;">edit</span> 修改
+                </button>
+                
+                ${!isClosed ? `
+                <button class="btn" style="flex: 1; height: 32px; font-size: 13px; padding: 0; min-width: 0; background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(217, 119, 6, 0.3); white-space: nowrap;" onclick="handleRollClick('${first.tradeId}')">
+                    <span class="material-symbols-rounded" style="font-size: 15px;">sync_alt</span> 滾單
+                </button>
+                
+                <button class="btn" style="flex: 1; height: 32px; font-size: 13px; padding: 0; min-width: 0; background: var(--positive-bg); color: var(--positive); border: 1px solid rgba(5, 150, 105, 0.3); white-space: nowrap;" onclick="openCloseDialog('${first.tradeId}')">
+                    <span class="material-symbols-rounded" style="font-size: 15px;">task_alt</span> 平倉
+                </button>
+                ` : ''}
+            </div>
+        `;
+        
+        return `
+        <div class="trade-card">
+            <div class="tc-header">
+                <span class="tc-header-id">#${first.tradeId}</span>
+                ${badge}
+            </div>
+            <div class="tc-content" style="padding-bottom: 16px;">
+                <div class="tc-flex-row" style="margin-bottom: 8px;">
+                    <div>
+                        <div class="tc-symbol">${escapeHtml(first.symbol)}</div>
+                        <div class="tc-strategy">${strategyDisplay}</div>
+                    </div>
+                    <div class="tc-profit-group">
+                        ${isClosed ? closedDisplayHtml : expectedProfitHtml}
+                    </div>
+                </div>  
+                <div class="tc-grid">
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">開倉日期</div>
+                        <div class="tc-grid-val">${parseDate(first.openDate).slice(5).replace('-', '/')}</div>
+                    </div>
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">開倉金額</div>
+                        <div class="tc-grid-val">${formatMoney(totalReceived)}</div>
+                    </div>
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">保證金</div>
+                        <div class="tc-grid-val">${first.margin ? formatMoney(first.margin) : '-'}</div>
+                    </div>
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">結案日期</div>
+                        <div class="tc-grid-val">${isClosed ? parseDate(first.closeDate).slice(5).replace('-', '/') : '-'}</div>
+                    </div>
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">平倉金額</div>
+                        <div class="tc-grid-val">${isClosed ? formatMoney(totalPaid) : '-'}</div>
+                    </div>
+                    <div class="tc-grid-item">
+                        <div class="tc-grid-label">手續費</div>
+                        <div class="tc-grid-val">${formatMoney(totalFees)}</div>
+                    </div>
+                </div>
+                ${notesHtml}
+                ${actionHtml}
+            </div>
+        </div>`;
+    }
+
+    function generateTableRowHtml(g, isClosed) {
+        const first = g.items[0]; 
+        const isIron = g.isIron;
+        const totalReceived = g.items.reduce((s, t) => s + (parseFloat(t.premiumReceived) || 0), 0);
+        const totalPaid = g.items.reduce((s, t) => s + (parseFloat(t.premiumPaid) || 0), 0);
+        const totalFees = g.items.reduce((s, t) => s + (parseFloat(t.fees) || 0), 0);
+        const profit = totalReceived - totalPaid - totalFees;
+        
+        const notesText = escapeHtml(getTradeNote(first, isIron));
+        const notesCellHtml = notesText ? `<div style="font-size:13px; color:var(--text-muted); max-width: 150px; white-space: normal;">${notesText}</div>` : '-';
+        
+        const openStr = parseDate(first.openDate).slice(5).replace('-', '/');
+        const closeStr = isClosed ? parseDate(first.closeDate).slice(5).replace('-', '/') : '-';
+        let dateCellHtml = `開: ${openStr}<br>結: ${closeStr}`;
+        
+        const pClass = profit >= 0 ? 'text-positive' : 'text-negative';
+        let pnlCellHtml = `
+            <div class="${pClass}" style="font-size: 17px; font-weight: 800; line-height: 1.2;">
+                ${formatMoney(profit)}
+            </div>
+        `;
+        
+        const pointHtml = isIron ? g.items.map(x => `(${escapeHtml(getTradePoint(x, true))})`).join('<br>') : escapeHtml(getTradePoint(first, false));
+        const typeUpper = (first.tradeType || '').toUpperCase().trim();
+        let strategyDisplayHtml = '';
+        
+        if (['SC', 'SP', 'BC', 'BP'].includes(typeUpper) && !isIron) {
+            strategyDisplayHtml = `<span style="font-size:13px;color:var(--text-muted);">${escapeHtml(first.tradeType)} ${escapeHtml(getTradePoint(first, false))}</span>`; 
+        } else {
+            let finalPoint = (!isIron && pointHtml) ? `(${pointHtml})` : pointHtml;
+            strategyDisplayHtml = `<span style="font-size:13px;color:var(--text-muted);">${escapeHtml(first.tradeType)}</span><br><span style="font-size:13px; font-family:var(--font-mono);">${finalPoint}</span>`;
+        }
+
+        const splitMoney = (num) => {
+            if (isNaN(num) || num === '') return { s: '', v: '-' };
+            const n = parseFloat(num);
+            const f = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return { s: n < 0 ? '-$' : '$', v: f };
+        };
+        
+        const mRec = splitMoney(totalReceived);
+        const mPaid = isClosed ? splitMoney(totalPaid) : { s: '', v: '-' };
+        const mFee = splitMoney(totalFees);
+
+        return `
+        <tr>
+            <td class="tabular-nums"><strong>${first.tradeId}</strong></td>
+            <td class="tabular-nums" style="font-size:13px;color:var(--text-muted); text-align: left;">${dateCellHtml}</td>
+            <td>
+                <strong style="color:var(--accent); font-size:15px;">${escapeHtml(first.symbol)}</strong><br>
+                ${strategyDisplayHtml}
+            </td>
+            <td class="tabular-nums" style="font-size:13px; color:var(--text-muted);">
+                <div style="display: inline-grid; grid-template-columns: auto auto 1fr; column-gap: 6px;">
+                    <span style="text-align: left;">收:</span><span style="text-align: right;">${mRec.s}</span><span style="text-align: right;">${mRec.v}</span>
+                    <span style="text-align: left;">付:</span><span style="text-align: right;">${mPaid.s}</span><span style="text-align: right;">${mPaid.v}</span>
+                    <span style="text-align: left;">費:</span><span style="text-align: right;">${mFee.s}</span><span style="text-align: right;">${mFee.v}</span>
+                </div>
+            </td>
+            <td class="tabular-nums">${pnlCellHtml}</td>
+            <td>${notesCellHtml}</td>
+            <td class="actions">
+                ${isIron && !isClosed && g.items.length === 2 ? `
+                <button class="btn-icon" onclick="openRollDialog('${g.items[0].tradeId}')" title="滾動 PUT 方"><span class="material-symbols-rounded">sync_alt</span></button>
+                <button class="btn-icon" onclick="openRollDialog('${g.items[1].tradeId}')" title="滾動 CALL 方"><span class="material-symbols-rounded">sync_alt</span></button>
+                ` : ''}
+                <button class="btn-icon" onclick="duplicateTrade('${first.tradeId}')" title="複製"><span class="material-symbols-rounded">content_copy</span></button>
+                <button class="btn-icon" onclick="openEditDialog('${first.tradeId}')" title="修改"><span class="material-symbols-rounded">edit</span></button>
+            </td>
+        </tr>`;
+    }
+
+    /* ==========================================================================
+       8. 交易操作
+    ========================================================================== */
+    function handleNewTradeSubmit(e) {
+        e.preventDefault();
+        const openDate = document.getElementById('newOpenDate').value;
+        const expiryDate = document.getElementById('newExpiryDate').value;
+        const symbol = document.getElementById('newSymbol').value.toUpperCase();
+        const tradeType = document.getElementById('newTradeType').value;
+        const fees = Math.abs(parseFloat(document.getElementById('newFees').value) || 0);
+        const notes = document.getElementById('newNotes').value.trim();
+        const point = document.getElementById('newPoint').value.trim();
+        
+        if (expiryDate && new Date(openDate) > new Date(expiryDate)) { 
+            showToast('開倉日不能晚於到期日', 'error'); 
+            return; 
+        }
+        
+        let margin = 0; 
+        const ts = tradeType.toUpperCase().replace(/\s+/g, '');
+        
+        if (ts.includes('鐵鷹') || ts.includes('垂直')) margin = 500;
+        else if (ts.includes('SP')) margin = (parseFloat(point) || parseFloat(ts.replace(/[^0-9.]/g, '')) || 0) * 100;
+        
+        const iron = isIronCondorType(tradeType);
+        const ids = iron ? [generateNextTradeId(0), generateNextTradeId(1)] : [generateNextTradeId(0)];
+        const groupTag = iron ? generateGroupTag() : null;
+        
+        const records = iron ? [
+            { action: 'add', tradeId: ids[0], openDate, expiryDate, closeDate: '', symbol, tradeType, margin, premiumReceived: document.getElementById('newPremiumReceivedA').value, fees: (fees / 2).toFixed(2), premiumPaid: '', point: document.getElementById('newIronPointA').value.trim(), notes: withTags(notes, { G: groupTag, S: 'P' }) },
+            { action: 'add', tradeId: ids[1], openDate, expiryDate, closeDate: '', symbol, tradeType, margin, premiumReceived: document.getElementById('newPremiumReceivedB').value, fees: (fees / 2).toFixed(2), premiumPaid: '', point: document.getElementById('newIronPointB').value.trim(), notes: withTags(notes, { G: groupTag, S: 'C' }) }
+        ] : [
+            { action: 'add', tradeId: ids[0], openDate, expiryDate, closeDate: '', symbol, tradeType, margin, premiumReceived: document.getElementById('newPremiumReceived').value, fees, premiumPaid: '', point, notes }
+        ];
+
+        trades.push(...records);
+        saveAndRenderLocal();
+        closeDialog('newTradeDialog');
+        showToast('交易已新增，背景同步中...');
+        
+        Promise.all(records.map(r => syncToServer(r, () => {
+            trades = trades.filter(t => t.tradeId !== r.tradeId);
+            saveAndRenderLocal();
+        })));
+    }
+
+    function duplicateTrade(id) {
+        const group = getIronCondorGroupById(id);
+        if(!group.length) return;
+        
+        const first = group[0];
+        const isIron = group.length >= 2;
+
+        openDialog('newTradeDialog');
+        
+        document.getElementById('newOpenDate').value = new Date().toISOString().slice(0, 10);
+        document.getElementById('newExpiryDate').value = parseDate(first.expiryDate);
+        document.getElementById('newSymbol').value = first.symbol;
+        document.getElementById('newTradeType').value = first.tradeType;
+
+        updateNewTradeTypeUI();
+
+        if (isIron) {
+            document.getElementById('newIronPointA').value = getTradePoint(group[0], true);
+            document.getElementById('newPremiumReceivedA').value = group[0].premiumReceived || '';
+            document.getElementById('newIronPointB').value = getTradePoint(group[1], true);
+            document.getElementById('newPremiumReceivedB').value = group[1].premiumReceived || '';
+            document.getElementById('newNotes').value = getTradeNote(group[0], true);
+            updateIronPremiumTotal();
+        } else {
+            document.getElementById('newPoint').value = getTradePoint(first, false);
+            document.getElementById('newPremiumReceived').value = first.premiumReceived || '';
+            document.getElementById('newNotes').value = getTradeNote(first, false);
+        }
+
+        const fees = isIron ? group.reduce((s, t) => s + (parseFloat(t.fees) || 0), 0) : (parseFloat(first.fees) || 0);
+        document.getElementById('newFees').value = fees.toFixed(2);
+
+        showToast('已複製策略內容，請確認後儲存');
+    }
+
+    function saveEditTrade() {
+        if(!editingId) return;
+        
+        const t = trades.find(x => String(x.tradeId) === String(editingId)); 
+        if(!t) return;
+        
+        const group = getIronCondorGroupById(editingId); 
+        const iron = isIronCondorType(t.tradeType) && group.length >= 2;
+        const fees = Math.abs(parseFloat(document.getElementById('editFees').value) || 0);
+        
+        const common = {
+            openDate: document.getElementById('editOpenDate').value, 
+            expiryDate: document.getElementById('editExpiryDate').value,
+            symbol: document.getElementById('editSymbol').value, 
+            tradeType: document.getElementById('editTradeType').value,
+            margin: Math.abs(parseFloat(document.getElementById('editMargin').value) || 0)
+        };
+        
+        const editedNoteText = document.getElementById('editNotes').value.trim();
+        const updates = iron ? group.map((leg, i) => ({
+            action: 'update', tradeId: leg.tradeId, ...common, fees: (fees / 2).toFixed(2),
+            closeDate: document.getElementById(i === 0 ? 'editCloseDateA' : 'editCloseDateB').value,
+            premiumReceived: document.getElementById(i === 0 ? 'editPremiumReceivedA' : 'editPremiumReceivedB').value,
+            premiumPaid: document.getElementById(i === 0 ? 'editPremiumPaidA' : 'editPremiumPaidB').value,
+            point: document.getElementById(i === 0 ? 'editIronPointA' : 'editIronPointB').value.trim(),
+            notes: withTags(editedNoteText, { G: extractTag(leg.notes, 'G'), S: extractTag(leg.notes, 'S') })
+        })) : [{
+            action: 'update', tradeId: editingId, ...common, fees,
+            point: document.getElementById('editPoint').value.trim(),
+            notes: document.getElementById('editNotes').value.trim(),
+            closeDate: document.getElementById('editCloseDate').value,
+            premiumReceived: document.getElementById('editPremiumReceived').value,
+            premiumPaid: document.getElementById('editPremiumPaid').value
+        }];
+        
+        closeDialog('editDialog');
+        updates.forEach(u => { 
+            const idx = trades.findIndex(x => String(x.tradeId) === String(u.tradeId)); 
+            if (idx > -1) trades[idx] = { ...trades[idx], ...u }; 
+        });
+        
+        saveAndRenderLocal();
+        showToast('紀錄已更新，背景同步中...');
+        
+        Promise.all(updates.map(u => syncToServer(u)));
+    }
+
+    function confirmDeleteFromEdit() {
+        if(!editingId) return;
+        if(!confirm('確定要刪除這筆交易嗎？此操作會同步至雲端。')) return;
+        
+        closeDialog('editDialog');
+        
+        const group = getIronCondorGroupById(editingId);
+        group.forEach(leg => {
+            const idx = trades.findIndex(t => String(t.tradeId) === String(leg.tradeId));
+            if(idx > -1) trades.splice(idx, 1);
+            syncToServer({ action: 'delete', tradeId: leg.tradeId });
+        });
+        
+        saveAndRenderLocal();
+        showToast('交易已刪除');
+    }
+
+    function confirmCloseTrade() {
+        const t = trades.find(x => String(x.tradeId) === String(closingId)); 
+        if(!t) return;
+        
+        const group = getIronCondorGroupById(closingId); 
+        const iron = isIronCondorType(t.tradeType) && group.length >= 2;
+        const fees = Math.abs(parseFloat(document.getElementById('dialogFees').value) || 0);
+        let updates = [];
+        
+        if (iron) {
+            const pA = document.getElementById('dialogPremiumPaidA').value;
+            const pB = document.getElementById('dialogPremiumPaidB').value;
+            const dA = document.getElementById('dialogCloseDateA').value;
+            const dB = document.getElementById('dialogCloseDateB').value;
+            
+            if (pA === '' || pB === '' || dA === '' || dB === '') { 
+                showToast('請填妥雙側平倉資訊', 'error'); return; 
+            }
+            if (new Date(dA) < new Date(group[0].openDate) || new Date(dB) < new Date(group[1].openDate)) { 
+                showToast('平倉日不能早於開倉日', 'error'); return; 
+            }
+            
+            updates = [
+                { action: 'update', tradeId: group[0].tradeId, ...group[0], closeDate: dA, premiumPaid: pA, fees: (fees / 2).toFixed(2) },
+                { action: 'update', tradeId: group[1].tradeId, ...group[1], closeDate: dB, premiumPaid: pB, fees: (fees / 2).toFixed(2) }
+            ];
+        } else {
+            const p = document.getElementById('dialogPremiumPaid').value;
+            const d = document.getElementById('dialogCloseDate').value;
+            
+            if (p === '' || d === '') { showToast('請填寫平倉資訊', 'error'); return; }
+            if (new Date(d) < new Date(t.openDate)) { showToast('平倉日不能早於開倉日', 'error'); return; }
+            
+            updates = [{ action: 'update', tradeId: closingId, ...t, closeDate: d, premiumPaid: p, fees }];
+        }
+        
+        closeDialog('closeDialog');
+        updates.forEach(u => { 
+            const idx = trades.findIndex(x => String(x.tradeId) === String(u.tradeId)); 
+            if (idx > -1) trades[idx] = { ...trades[idx], ...u }; 
+        });
+        
+        saveAndRenderLocal();
+        showToast('交易已平倉，背景同步中...');
+        
+        Promise.all(updates.map(u => syncToServer(u)));
+    }
+
+    let rollingLegId = null;
+
+    function openRollDialog(id) {
+        const t = trades.find(x => String(x.tradeId) === String(id));
+        if (!t) return;
+        if (t.closeDate) { showToast('這一腳已經平倉了，無法再滾動', 'error'); return; }
+
+        rollingLegId = id;
+        const isIron = isIronCondorType(t.tradeType);
+        const group = getIronCondorGroupById(id);
+        let sideLabel = '';
+        if (isIron && group.length === 2) {
+            const idx = group.findIndex(x => String(x.tradeId) === String(id));
+            sideLabel = idx === 0 ? '（PUT 方）' : '（CALL 方）';
+        }
+        document.getElementById('rollLegLabel').textContent = `#${t.tradeId} ${sideLabel} 目前點位: ${getTradePoint(t, isIron) || '-'}`;
+
+        const today = new Date().toISOString().slice(0, 10);
+        document.getElementById('rollDate').value = today;
+        document.getElementById('rollClosePremium').value = '';
+        document.getElementById('rollNewPoint').value = '';
+        document.getElementById('rollNewPremium').value = '';
+        document.getElementById('rollNotes').value = getTradeNote(t, isIron);
+
+        openDialog('rollDialog');
+    }
+
+    async function confirmRollLeg() {
+        const oldLeg = trades.find(x => String(x.tradeId) === String(rollingLegId));
+        if (!oldLeg) return;
+
+        const rollDate = document.getElementById('rollDate').value;
+        const closePremium = document.getElementById('rollClosePremium').value;
+        const newPoint = document.getElementById('rollNewPoint').value.trim();
+        const newPremium = document.getElementById('rollNewPremium').value;
+        const fees = 2.64; // 固定手續費為 2.64
+        const newNotesText = document.getElementById('rollNotes').value.trim();
+
+        if (!rollDate || closePremium === '' || !newPoint || newPremium === '') {
+            showToast('請完整填寫滾動資訊', 'error'); return;
+        }
+        if (new Date(rollDate) < new Date(oldLeg.openDate)) {
+            showToast('滾動日不能早於這一腳的開倉日', 'error'); return;
+        }
+
+        const group = getIronCondorGroupById(oldLeg.tradeId);
+        const sibling = group.find(x => String(x.tradeId) !== String(oldLeg.tradeId));
+        
+        const isOriginalIron = isIronCondorType(oldLeg.tradeType);
+
+        let tag = extractTag(oldLeg.notes, 'G');
+        let sideOld = extractTag(oldLeg.notes, 'S');
+        const extraUpdates = [];
+
+        if (!tag) {
+            tag = generateGroupTag();
+            const oldIdx = group.findIndex(x => String(x.tradeId) === String(oldLeg.tradeId));
+            sideOld = oldIdx === 0 ? 'P' : 'C';
+            const sideSibling = sideOld === 'P' ? 'C' : 'P';
+
+            if (sibling) {
+                const sibUpdate = {
+                    action: 'update', tradeId: sibling.tradeId, ...sibling,
+                    notes: withTags(getTradeNote(sibling, true), { G: tag, S: sideSibling })
+                };
+                const sIdx = trades.findIndex(x => String(x.tradeId) === String(sibling.tradeId));
+                if (sIdx > -1) trades[sIdx] = { ...trades[sIdx], ...sibUpdate };
+                extraUpdates.push(sibUpdate);
+            }
+        }
+
+        // 將舊部位改名並平倉
+        let closedLegTradeType = oldLeg.tradeType;
+        if (isOriginalIron) {
+            closedLegTradeType = (sideOld === 'P') ? 'SP 垂直' : 'SC 垂直';
+        }
+
+        // ★ 修正手續費計算邏輯：
+        // 舊單累積手續費 = 原本開倉的費用 + 本次滾動平倉的費用 (2.64 / 2 = 1.32)
+        const oldFees = parseFloat(oldLeg.fees) || 0;
+        const totalOldFees = (oldFees + (fees / 2)).toFixed(2);
+        
+        // 新單開倉的手續費 = 本次滾動新開倉的費用 (2.64 / 2 = 1.32)
+        const newActionFee = (fees / 2).toFixed(2);
+
+        const closeUpdate = {
+            action: 'add', 
+            tradeId: oldLeg.tradeId, ...oldLeg,
+            tradeType: closedLegTradeType, 
+            notes: withTags(getTradeNote(oldLeg, isOriginalIron), { G: tag, S: sideOld }),
+            closeDate: rollDate, 
+            premiumPaid: closePremium, 
+            fees: totalOldFees
+        };
+
+        const newLegId = generateNextTradeId(0);
+        const newLeg = {
+            action: 'add', tradeId: newLegId,
+            openDate: rollDate, expiryDate: oldLeg.expiryDate, closeDate: '',
+            symbol: oldLeg.symbol, 
+            tradeType: oldLeg.tradeType,
+            margin: oldLeg.margin,
+            premiumReceived: newPremium, 
+            fees: newActionFee,
+            premiumPaid: '',
+            point: newPoint, 
+            notes: withTags(newNotesText, { G: tag, S: sideOld })
+        };
+
+        closeDialog('rollDialog');
+
+        const idx = trades.findIndex(x => String(x.tradeId) === String(oldLeg.tradeId));
+        if (idx > -1) {
+            const localUpdate = { ...closeUpdate, action: 'update' };
+            trades[idx] = { ...trades[idx], ...localUpdate };
+        }
+        trades.push(newLeg);
+
+        saveAndRenderLocal();
+        showToast('滾動完成！舊部位已轉為垂直價差平倉，新部位維持鐵鷹陣型');
+
+        await syncToServer({ action: 'delete', tradeId: oldLeg.tradeId });
+
+        Promise.all([...extraUpdates, closeUpdate].map(u => syncToServer(u)));
+        
+        syncToServer(newLeg, () => {
+            trades = trades.filter(x => x.tradeId !== newLeg.tradeId);
+            saveAndRenderLocal();
+        });
+    }
+
+
+    function exportCSV() {
+        let csv = '交易序號,開倉日,到期日,結案日,標的物,類型,保證金,開倉權利金,平倉權利金,手續費,點位,備註\n';
+        trades.forEach(t => {
+            const iron = isIronCondorType(t.tradeType);
+            const pointVal = getTradePoint(t, iron);
+            const noteVal = getTradeNote(t, iron);
+            csv += `${t.tradeId},${parseDate(t.openDate)},${parseDate(t.expiryDate)},${parseDate(t.closeDate)},${t.symbol},${t.tradeType},${t.margin || 0},${t.premiumReceived || 0},${t.premiumPaid || ''},${t.fees || 0},"${pointVal.replace(/"/g, '""')}","${noteVal.replace(/"/g, '""')}"\n`;
+        });
+        
+        const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `TradeRecord_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+    }
+
+    /* ==========================================================================
+       9. 互動視窗操作
+    ========================================================================== */
+    function openDialog(id) { document.getElementById(id).showModal(); }
+    function closeDialog(id) { document.getElementById(id).close(); }
+
+    function openNewTradeDialog() {
+        const today = new Date().toISOString().slice(0, 10);
+        document.getElementById('newOpenDate').value = today;
+        updateNewTradeTypeUI();
+        openDialog('newTradeDialog');
+    }
+
+    function updateNewTradeTypeUI() {
+        const type = document.getElementById('newTradeType').value;
+        const iron = isIronCondorType(type);
+        
+        document.getElementById('singlePremiumGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('singlePointGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('sharedNotesGroup').style.display = 'flex'; 
+        
+        const panel = document.getElementById('newIronCondorPanel');
+        if (iron) panel.classList.add('active'); else panel.classList.remove('active');
+        
+        document.getElementById('newPremiumReceived').required = !iron;
+        document.getElementById('newPremiumReceivedA').required = iron;
+        document.getElementById('newPremiumReceivedB').required = iron;
+        
+        let calculatedFee = getLegCount(type) * 0.66;
+        document.getElementById('newFees').value = Math.min(calculatedFee, 5.28).toFixed(2);
+    }
+
+    function updateIronPremiumTotal() {
+        const a = parseFloat(document.getElementById('newPremiumReceivedA').value) || 0;
+        const b = parseFloat(document.getElementById('newPremiumReceivedB').value) || 0;
+        document.getElementById('newPremiumReceivedTotal').textContent = formatMoney(a + b);
+    }
+
+    function clearTradeForm() {
+        document.getElementById('tradeForm').reset();
+        document.getElementById('newOpenDate').value = new Date().toISOString().slice(0, 10);
+        updateNewTradeTypeUI();
+    }
+
+    function openEditDialog(id) {
+        editingId = id; 
+        const t = trades.find(x => String(x.tradeId) === String(id)); 
+        if(!t) return;
+        
+        const group = getIronCondorGroupById(id); 
+        const iron = isIronCondorType(t.tradeType) && group.length >= 2;
+        
+        document.getElementById('editOpenDate').value = parseDate(t.openDate);
+        document.getElementById('editExpiryDate').value = parseDate(t.expiryDate);
+        document.getElementById('editSymbol').value = t.symbol || '';
+        document.getElementById('editTradeType').value = t.tradeType || '';
+        document.getElementById('editMargin').value = t.margin || '';
+        
+        const totalFees = iron ? group.reduce((s, x) => s + (parseFloat(x.fees) || 0), 0) : parseFloat(t.fees) || 0;
+        document.getElementById('editFees').value = totalFees.toFixed(2);
+        
+        document.getElementById('editPoint').value = getTradePoint(t, iron);
+        document.getElementById('editNotes').value = getTradeNote(t, iron);
+        
+        document.getElementById('singleEditCloseDateGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('singleEditPremiumReceivedGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('singleEditPremiumPaidGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('singleEditPointGroup').style.display = iron ? 'none' : 'flex';
+        document.getElementById('singleEditNotesGroup').style.display = 'flex';
+        
+        const panel = document.getElementById('ironEditPanel');
+        if (iron) {
+            panel.classList.add('active');
+            const a = group[0], b = group[1];
+            
+            document.getElementById('editIronPointA').value = getTradePoint(a, true);
+            document.getElementById('editIronPointB').value = getTradePoint(b, true);
+            document.getElementById('editPremiumReceivedA').value = a.premiumReceived || '';
+            document.getElementById('editPremiumReceivedB').value = b.premiumReceived || '';
+            document.getElementById('editCloseDateA').value = parseDate(a.closeDate);
+            document.getElementById('editCloseDateB').value = parseDate(b.closeDate);
+            document.getElementById('editPremiumPaidA').value = a.premiumPaid || '';
+            document.getElementById('editPremiumPaidB').value = b.premiumPaid || '';
+            updateEditIronTotals();
+        } else {
+            panel.classList.remove('active');
+            document.getElementById('editCloseDate').value = parseDate(t.closeDate);
+            document.getElementById('editPremiumReceived').value = t.premiumReceived || '';
+            document.getElementById('editPremiumPaid').value = t.premiumPaid || '';
+        }
+        
+        openDialog('editDialog');
+    }
+
+    function updateEditIronTotals() {
+        const ra = parseFloat(document.getElementById('editPremiumReceivedA').value) || 0;
+        const rb = parseFloat(document.getElementById('editPremiumReceivedB').value) || 0;
+        const pa = parseFloat(document.getElementById('editPremiumPaidA').value) || 0;
+        const pb = parseFloat(document.getElementById('editPremiumPaidB').value) || 0;
+        
+        document.getElementById('editPremiumReceivedTotal').textContent = formatMoney(ra + rb);
+        document.getElementById('editPremiumPaidTotal').textContent = formatMoney(pa + pb);
+    }
+
+    function openCloseDialog(id) {
+        closingId = id; 
+        const t = trades.find(x => String(x.tradeId) === String(id)); 
+        if(!t) return;
+        
+        const group = getIronCondorGroupById(id); 
+        const iron = isIronCondorType(t.tradeType) && group.length >= 2;
+        const today = new Date().toISOString().slice(0, 10);
+        
+        document.getElementById('singleCloseFields').style.display = iron ? 'none' : 'flex';
+        const ironUi = document.getElementById('ironCloseFields');
+        if (iron) ironUi.classList.add('active'); else ironUi.classList.remove('active');
+        
+        if (iron) {
+            document.getElementById('dialogPremiumPaidA').value = group[0].premiumPaid || '';
+            document.getElementById('dialogPremiumPaidB').value = group[1].premiumPaid || '';
+            document.getElementById('dialogCloseDateA').value = parseDate(group[0].closeDate) || today;
+            document.getElementById('dialogCloseDateB').value = parseDate(group[1].closeDate) || today;
+            updateCloseIronTotal();
+        } else {
+            document.getElementById('dialogPremiumPaid').value = t.premiumPaid || '';
+            document.getElementById('dialogCloseDate').value = parseDate(t.closeDate) || today;
+        }
+        
+        const currentTotalFees = iron ? group.reduce((s, x) => s + (parseFloat(x.fees) || 0), 0) : parseFloat(t.fees) || 0;
+        const isFullyClosed = iron ? group.every(x => x.premiumPaid !== '' && !isNaN(parseFloat(x.premiumPaid))) : (t.premiumPaid !== '' && !isNaN(parseFloat(t.premiumPaid)));
+        const additionalFee = isFullyClosed ? 0 : (getLegCount(t.tradeType) * 0.66);
+
+        let totalCalc = currentTotalFees + additionalFee;
+        document.getElementById('dialogFees').value = Math.min(totalCalc, 5.28).toFixed(2);
+        openDialog('closeDialog');
+    }
+
+    function updateCloseIronTotal() {
+        const a = parseFloat(document.getElementById('dialogPremiumPaidA').value) || 0;
+        const b = parseFloat(document.getElementById('dialogPremiumPaidB').value) || 0;
+        document.getElementById('dialogPremiumPaidTotal').textContent = formatMoney(a + b);
+    }
+
+    /* ==========================================================================
+       10. 系統設定邏輯
+    ========================================================================== */
+    function toggleApiUrlField() {
+        const wrap = document.getElementById('api-url-field-wrap');
+        const icon = document.getElementById('toggle-api-url-icon');
+        const isHidden = wrap.style.display === 'none';
+        wrap.style.display = isHidden ? 'grid' : 'none';
+        icon.textContent = isHidden ? 'visibility_off' : 'visibility';
+    }
+
+    function loadSettings() {
+        const saved = localStorage.getItem('opTrackerSettings');
+        if (saved) {
+            appSettings = { ...appSettings, ...JSON.parse(saved) };
+        }
+        
+        INITIAL_CASH = appSettings.capital || 10000;
+        API_URL = appSettings.apiUrl || API_URL;
+        APP_SECRET = appSettings.apiSecret || APP_SECRET;
+
+        const nameInput = document.getElementById('setting-name');
+        if (nameInput) {
+            nameInput.value = appSettings.name;
+            document.getElementById('setting-capital').value = appSettings.capital;
+            
+            const targetInput = document.getElementById('setting-monthly-target');
+            if (targetInput) targetInput.value = appSettings.monthlyTargetRoc !== undefined ? appSettings.monthlyTargetRoc : 5;
+            
+            document.getElementById('setting-api-url').value = appSettings.apiUrl;
+        }
+    }
+
+    function saveSettings() {
+        const name = document.getElementById('setting-name').value.trim() || '交易員';
+
+        const capitalRaw = parseFloat(document.getElementById('setting-capital').value);
+        const capital = isNaN(capitalRaw) ? (appSettings.capital || 10000) : capitalRaw;
+
+        const targetRaw = parseFloat(document.getElementById('setting-monthly-target').value);
+        const monthlyTargetRoc = isNaN(targetRaw) ? (appSettings.monthlyTargetRoc !== undefined ? appSettings.monthlyTargetRoc : 5) : targetRaw;
+
+        const apiUrl = document.getElementById('setting-api-url').value.trim();
+        const needReloadData = (apiUrl !== appSettings.apiUrl);
+
+        appSettings = { ...appSettings, name, capital, monthlyTargetRoc, apiUrl };
+        localStorage.setItem('opTrackerSettings', JSON.stringify(appSettings));
+
+        INITIAL_CASH = appSettings.capital;
+        API_URL = appSettings.apiUrl;
+        APP_SECRET = appSettings.apiSecret;
+        
+        updateAllViews();
+
+        if (API_URL && APP_SECRET && !needReloadData) {
+            const fd = new URLSearchParams();
+            fd.append('secret', APP_SECRET);
+            fd.append('action', 'saveSettings');
+            fd.append('name', name);
+            fd.append('capital', capital);
+            fd.append('monthlyTargetRoc', monthlyTargetRoc);
+            
+            fetch(API_URL, { method: 'POST', body: fd }).catch(e => console.error("設定同步失敗", e));
+        }
+
+        showToast('設定已成功儲存！', 'success');
+        
+        if (needReloadData && API_URL) {
+            loadData(true);
+        }
+        navigate('dashboard');
+    }
+
+    /* ==========================================================================
+       11. 登入 / 登出
+    ========================================================================== */
+    function showLoginScreen(message) {
+        document.getElementById('login-screen').style.display = 'flex';
+        if (message) {
+            const errEl = document.getElementById('login-error');
+            errEl.textContent = message;
+            errEl.style.display = 'block';
+        }
+        setTimeout(() => {
+            const input = document.getElementById('login-code-input');
+            if (input) input.focus();
+        }, 100);
+    }
+
+    function hideLoginScreen() {
+        document.getElementById('login-screen').style.display = 'none';
+    }
+
+    async function handleLogin() {
+        const input = document.getElementById('login-code-input');
+        const code = input.value.trim();
+        const errEl = document.getElementById('login-error');
+        const btn = document.getElementById('login-submit-btn');
+        errEl.style.display = 'none';
+
+        if (!code) {
+            errEl.textContent = '請輸入您的專屬代號';
+            errEl.style.display = 'block';
+            input.focus();
+            return;
+        }
+
+        btn.disabled = true;
+        const originalBtnHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-rounded login-spin">progress_activity</span> 驗證中...';
+
+        let invalid = false;
+        let offline = false;
+
+        try {
+            const response = await fetch(`${API_URL}?secret=${encodeURIComponent(code)}`);
+            let data = null;
+            try { data = await response.json(); } catch (parseErr) { data = null; }
+            if (data && data.error) invalid = true;
+        } catch (networkErr) {
+            offline = true;
+        }
+
+        if (invalid) {
+            errEl.textContent = '代號錯誤，請確認後再試一次';
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+            input.select();
+            return;
+        }
+
+        if (offline) {
+            const trustedSecret = localStorage.getItem('verifiedSecret');
+            if (!trustedSecret || trustedSecret !== code) {
+                errEl.textContent = '目前無法連線伺服器，且此代號尚未在本裝置驗證過，請連上網路後再試一次';
+                errEl.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+                input.select();
+                return;
+            }
+        } else {
+            localStorage.setItem('verifiedSecret', code);
+        }
+
+        appSettings.apiSecret = code;
+        appSettings.apiUrl = appSettings.apiUrl || API_URL;
+        APP_SECRET = code;
+        localStorage.setItem('opTrackerSettings', JSON.stringify(appSettings));
+
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHtml;
+
+        hideLoginScreen();
+        loadData();
+        if (offline) showToast('目前無法連線伺服器，將於恢復連線後自動同步', 'error');
+    }
+
+    function logout() {
+        if (!confirm('確定要登出嗎？登出後需要重新輸入代號才能繼續使用。')) return;
+
+        appSettings.apiSecret = '';
+        APP_SECRET = '';
+        localStorage.setItem('opTrackerSettings', JSON.stringify(appSettings));
+        localStorage.removeItem('trades_cache');
+        trades = [];
+        updateAllViews();
+
+        const codeInput = document.getElementById('login-code-input');
+        if (codeInput) codeInput.value = '';
+        const errEl = document.getElementById('login-error');
+        if (errEl) errEl.style.display = 'none';
+
+        showLoginScreen();
+    }
+
+    /* ==========================================================================
+       12. 初始化
+    ========================================================================== */
+    window.onload = () => {
+        loadSettings(); 
+        initTheme();
+        const hash = (location.hash || '').replace('#', '');
+        if (VIEW_TITLES[hash]) navigate(hash); else navigate('dashboard');
+
+        if (appSettings.apiSecret && appSettings.apiSecret.trim() !== '') {
+            hideLoginScreen();
+            loadData();
+        } else {
+            showLoginScreen();
+        }
+        
+        detectStandalone();
+        refreshLayout();
+        setTimeout(refreshLayout, 300);
+    };
+
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+
+    function handleRollClick(id) {
+        const t = trades.find(x => String(x.tradeId) === String(id));
+        if (!t) return;
+        
+        const group = getIronCondorGroupById(id);
+        const isIron = isIronCondorType(t.tradeType);
+
+        if (isIron && group.length === 2) {
+            let dialog = document.getElementById('rollSelectDialog');
+            if (!dialog) {
+                dialog = document.createElement('dialog');
+                dialog.id = 'rollSelectDialog';
+                document.body.appendChild(dialog);
+            }
+            
+            dialog.innerHTML = `
+                <div class="dialog-header">
+                    <div class="dialog-title">選擇滾動邊</div>
+                    <button class="btn-icon" onclick="closeDialog('rollSelectDialog')"><span class="material-symbols-rounded">close</span></button>
+                </div>
+                <div class="dialog-content" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="btn btn-secondary" style="height: var(--control-h); justify-content: space-between; padding: 0 16px;" onclick="closeDialog('rollSelectDialog'); openRollDialog('${group[0].tradeId}')">
+                        <span style="font-weight: 700;">PUT 方 <span style="color: var(--text-muted); font-weight: 500;">(${escapeHtml(getTradePoint(group[0], true))})</span></span>
+                        <span class="material-symbols-rounded">chevron_right</span>
+                    </button>
+                    <button class="btn btn-secondary" style="height: var(--control-h); justify-content: space-between; padding: 0 16px;" onclick="closeDialog('rollSelectDialog'); openRollDialog('${group[1].tradeId}')">
+                        <span style="font-weight: 700;">CALL 方 <span style="color: var(--text-muted); font-weight: 500;">(${escapeHtml(getTradePoint(group[1], true))})</span></span>
+                        <span class="material-symbols-rounded">chevron_right</span>
+                    </button>
+                </div>
+            `;
+            openDialog('rollSelectDialog');
+        } else {
+            openRollDialog(id);
+        }
+    }
+</script>
+</body>
+</html>
