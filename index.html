@@ -914,6 +914,66 @@
             }
         }
 
+
+        /* v7: + center aligned with top edge of the bar; side buttons vertically centered */
+        @media (max-width: 768px) {
+            :root {
+                --mobile-nav-content-h: 68px !important;
+                --mobile-nav-safe-b: max(env(safe-area-inset-bottom, 0px), 8px) !important;
+            }
+
+            #mobile-nav {
+                height: calc(68px + max(env(safe-area-inset-bottom, 0px), 8px)) !important;
+                min-height: calc(68px + max(env(safe-area-inset-bottom, 0px), 8px)) !important;
+                padding-top: 0 !important;
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
+                background: #08112b !important;
+                align-items: stretch !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item {
+                height: 68px !important;
+                min-height: 68px !important;
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
+
+            #mobile-nav .mobile-nav-item-fab {
+                justify-content: center !important;
+                padding-bottom: 0 !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                width: 65px !important;
+                height: 65px !important;
+                min-width: 65px !important;
+                min-height: 65px !important;
+                transform: translateY(-32px) !important;
+                background: #08112b !important;
+                color: #fff !important;
+                border: 4px solid #fff !important;
+                border-radius: 50% !important;
+                box-shadow: 0 12px 28px rgba(0,0,0,.24) !important;
+                margin: 0 auto !important;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px !important;
+            }
+
+            body::after {
+                height: calc(68px + max(env(safe-area-inset-bottom, 0px), 8px)) !important;
+                background: #08112b !important;
+            }
+
+            #view-container {
+                padding-bottom: calc(68px + max(env(safe-area-inset-bottom, 0px), 8px) + 18px) !important;
+            }
+        }
+
     </style>
 </head>
 <body>
