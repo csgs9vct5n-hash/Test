@@ -1179,6 +1179,60 @@
             }
         }
 
+        /* v20: restore light page background and pin nav to the true bottom */
+        @media (max-width: 768px) {
+            html {
+                background: #08112b !important;
+                background-color: #08112b !important;
+            }
+
+            body,
+            #app-shell,
+            #main-area,
+            #view-container {
+                background: var(--bg) !important;
+                background-color: var(--bg) !important;
+                margin-bottom: 0 !important;
+            }
+
+            #mobile-nav {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: #08112b !important;
+                background-color: #08112b !important;
+                border: 0 !important;
+                box-sizing: border-box !important;
+                z-index: 100 !important;
+            }
+
+            #mobile-nav > .mobile-nav-item {
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                transform: translateY(-18px) !important;
+            }
+
+            #view-container {
+                padding-bottom: 84px !important;
+            }
+
+            body::after {
+                content: none !important;
+                display: none !important;
+            }
+        }
+
     </style>
 </head>
 <body>
