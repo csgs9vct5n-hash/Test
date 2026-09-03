@@ -1145,6 +1145,40 @@
             }
         }
 
+
+        /* v19: stable nav height before/after rotation; raise bar slightly */
+        @media (max-width: 768px) {
+            #mobile-nav {
+                bottom: 10px !important;
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+                padding: 0 !important;
+                background: #08112b !important;
+            }
+
+            #mobile-nav > .mobile-nav-item {
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                transform: translateY(-18px) !important;
+            }
+
+            #view-container {
+                padding-bottom: 94px !important;
+            }
+
+            html,
+            body,
+            #app-shell,
+            #main-area {
+                background-color: #08112b !important;
+            }
+        }
+
     </style>
 </head>
 <body>
