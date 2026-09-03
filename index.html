@@ -119,7 +119,7 @@
         ========================================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --app-height: 100dvh;
+            --app-height: 100lvh;
         }
 
         html {
@@ -782,16 +782,16 @@
 
             html {
                 width: 100%;
-                height: 100dvh;
-                min-height: 100dvh;
+                height: 100lvh;
+                min-height: 100lvh;
                 overflow: hidden;
                 background: #08112b;
             }
 
             body {
                 width: 100%;
-                height: 100dvh;
-                min-height: 100dvh;
+                height: 100lvh;
+                min-height: 100lvh;
                 overflow: hidden;
                 background: var(--bg);
             }
@@ -807,8 +807,8 @@
                 position: fixed;
                 inset: 0;
                 width: 100%;
-                height: 100dvh;
-                min-height: 100dvh;
+                height: 100lvh;
+                min-height: 100lvh;
                 padding: 24px;
                 padding-top: max(24px, env(safe-area-inset-top, 0px));
                 padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
@@ -926,7 +926,7 @@
                 top: auto;
                 width: 100%;
                 max-width: 100%;
-                max-height: calc(100dvh - 96px);
+                max-height: calc(100lvh - 96px);
                 margin: 0;
                 border-radius: 22px 22px 0 0;
                 overflow: hidden;
@@ -945,6 +945,63 @@
 
             .dialog-footer {
                 padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            }
+        }
+
+        /* v22: stable iPhone viewport; no first-load/rotation mismatch */
+        @media (max-width: 768px) {
+            html {
+                width: 100%;
+                height: 100lvh !important;
+                min-height: 100lvh !important;
+                background: #08112b !important;
+                overflow: hidden !important;
+            }
+
+            body {
+                width: 100%;
+                height: 100lvh !important;
+                min-height: 100lvh !important;
+                background: var(--bg) !important;
+                overflow: hidden !important;
+            }
+
+            #app-shell,
+            #main-area {
+                height: 100lvh !important;
+                min-height: 0 !important;
+            }
+
+            #login-screen {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100% !important;
+                height: 100lvh !important;
+                min-height: 100lvh !important;
+                background: radial-gradient(circle at 50% 0%, #141a2e 0%, #0a0e1a 60%) !important;
+            }
+
+            #mobile-nav {
+                position: fixed !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                background: #08112b !important;
+            }
+
+            body::after {
+                content: none !important;
+                display: none !important;
+            }
+        }
+
+        @supports not (height: 100lvh) {
+            @media (max-width: 768px) {
+                html, body, #app-shell, #main-area, #login-screen {
+                    height: 100vh !important;
+                    min-height: 100vh !important;
+                }
             }
         }
 
@@ -1493,32 +1550,6 @@
     }
     detectStandalone();
 
-    function kickSafeAreaRecalc() {
-        const viewportMeta = document.querySelector('meta[name="viewport"]');
-        if (!viewportMeta) return;
-        const original = viewportMeta.getAttribute('content');
-        if (!original) return;
-        viewportMeta.setAttribute('content', original + ', shrink-to-fit=yes');
-        requestAnimationFrame(() => {
-            viewportMeta.setAttribute('content', original);
-            refreshLayout();
-        });
-    }
-
-    window.addEventListener('load', () => {
-        kickSafeAreaRecalc();
-        setTimeout(kickSafeAreaRecalc, 300);
-    });
-    window.addEventListener('pageshow', (e) => {
-        if (e.persisted) kickSafeAreaRecalc();
-    });
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            refreshLayout();
-            kickSafeAreaRecalc();
-        }
-    });
-
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -1808,7 +1839,12 @@
         localStorage.setItem('theme_preference', theme);
         const headerIcon = document.getElementById('theme-icon-header');
         if(headerIcon) headerIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-        document.getElementById('theme-color-meta').content = theme === 'dark' ? '#0a0e1a' : '#f8fafc';
+        const themeMeta = document.getElementById('theme-color-meta');
+        if (themeMeta) {
+            themeMeta.content = window.matchMedia('(max-width: 768px)').matches
+                ? '#08112b'
+                : (theme === 'dark' ? '#0a0e1a' : '#f8fafc');
+        }
         renderCharts();
     }
 
