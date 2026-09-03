@@ -766,80 +766,150 @@
             html, body { min-height: -webkit-fill-available; }
         }
 
-        /* iPhone Safari / in-app browser：避免初次直向載入底部露白 */
+
+        /* =========================================
+           Clean iPhone / Mobile Layout Reset
+           - CSS-only viewport sizing
+           - one safe-area calculation
+           - fixed bottom nav
+           - centered FAB
+        ========================================= */
         @media (max-width: 768px) {
+            :root {
+                --mobile-nav-content-h: 64px;
+                --mobile-nav-safe-b: env(safe-area-inset-bottom, 0px);
+            }
+
             html {
-                background: #0a0e1a !important;
-                min-height: 100%;
+                width: 100%;
+                height: 100dvh;
                 min-height: 100dvh;
+                overflow: hidden;
+                background: #08112b;
             }
 
             body {
-                background: #0a0e1a !important;
-            }
-
-            /* 登入頁向視窗底部額外延伸，處理 iOS 初次載入 viewport 少算底部區域 */
-            #login-screen {
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: -220px !important;
-                min-height: calc(100dvh + 220px);
-                padding-bottom: 244px;
-                background: radial-gradient(circle at 50% 0%, #141a2e 0%, #0a0e1a 60%) !important;
-            }
-
-            /* 即使 JS 回報的 --app-height 偏小，也不允許頁面低於動態視窗高度 */
-            html, body {
-                height: max(var(--app-height), 100dvh);
-                min-height: max(var(--app-height), 100dvh);
-            }
-        }
-
-        /* iPhone Safari 初次直向載入：強制底部背景覆蓋至實際視窗底端 */
-        @media (max-width: 768px) {
-            html, body {
                 width: 100%;
-                height: var(--app-height);
-                min-height: var(--app-height);
-                background-color: #0f172a;
+                height: 100dvh;
+                min-height: 100dvh;
+                overflow: hidden;
+                background: var(--bg);
             }
 
-            body::after {
-                content: '';
+            #app-shell,
+            #main-area {
+                height: 100%;
+                min-height: 0;
+                background: var(--bg);
+            }
+
+            #login-screen {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100dvh;
+                min-height: 100dvh;
+                padding: 24px;
+                padding-top: max(24px, env(safe-area-inset-top, 0px));
+                padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+                background: radial-gradient(circle at 50% 0%, #141a2e 0%, #0a0e1a 60%);
+            }
+
+            #view-container {
+                flex: 1;
+                min-height: 0;
+                overflow-y: auto;
+                overflow-x: hidden;
+                background: var(--bg);
+                padding: 12px 12px calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b) + 18px);
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #mobile-nav {
                 position: fixed;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                height: calc(var(--mobile-nav-content-h) + max(env(safe-area-inset-bottom, 0px), 2px));
-                background: #0f172a;
-                z-index: 49;
-                pointer-events: none;
+                width: 100%;
+                height: calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b));
+                min-height: calc(var(--mobile-nav-content-h) + var(--mobile-nav-safe-b));
+                padding: 0 0 var(--mobile-nav-safe-b);
+                margin: 0;
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                align-items: center;
+                justify-items: center;
+                background: #08112b;
+                border: 0;
+                overflow: visible;
+                z-index: 60;
+                box-sizing: border-box;
             }
 
-            #mobile-nav {
-                bottom: 0 !important;
-                min-height: calc(var(--mobile-nav-content-h) + max(env(safe-area-inset-bottom, 0px), 2px));
-                padding-bottom: max(env(safe-area-inset-bottom, 0px), 2px);
-                background: #0f172a !important;
+            #mobile-nav > .mobile-nav-item {
+                width: 100%;
+                height: var(--mobile-nav-content-h);
+                min-height: var(--mobile-nav-content-h);
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                transform: none;
+                overflow: visible;
+                white-space: nowrap;
+                font-size: 10px;
+                line-height: 1.1;
+                color: #64748b;
             }
-        }
 
-        /* v16: clean mobile bottom navigation + mobile dialog layout */
-        @media (max-width: 768px) {
-            html,
-            body,
-            #app-shell {
-                background: #08112b !important;
-                background-color: #08112b !important;
+            #mobile-nav > .mobile-nav-item.active {
+                color: var(--accent);
             }
 
-            /* Keep login background continuous to the bottom */
-            #login-screen {
-                inset: 0 !important;
-                min-height: 100dvh !important;
-                padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
-                background: linear-gradient(180deg, #141a2e 0%, #08112b 100%) !important;
+            #mobile-nav > .mobile-nav-item:nth-child(1) { grid-column: 1; }
+            #mobile-nav > .mobile-nav-item:nth-child(2) { grid-column: 2; }
+            #mobile-nav > .mobile-nav-item:nth-child(3) { grid-column: 3; }
+            #mobile-nav > .mobile-nav-item:nth-child(4) { grid-column: 4; }
+            #mobile-nav > .mobile-nav-item:nth-child(5) { grid-column: 5; }
+
+            #mobile-nav > .mobile-nav-item .material-symbols-rounded {
+                font-size: 22px;
+                line-height: 1;
+            }
+
+            #mobile-nav > .mobile-nav-item-fab {
+                position: relative;
+                z-index: 70;
+            }
+
+            #mobile-nav .mobile-nav-fab {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                width: 64px;
+                height: 64px;
+                min-width: 64px;
+                min-height: 64px;
+                margin: 0;
+                padding: 0;
+                transform: translate(-50%, -50%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 4px solid #fff;
+                border-radius: 50%;
+                background: #08112b;
+                color: #fff;
+                box-shadow: 0 10px 24px rgba(0,0,0,.22);
+                box-sizing: border-box;
+            }
+
+            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
+                font-size: 32px;
+                line-height: 1;
             }
 
             body::after {
@@ -847,389 +917,34 @@
                 display: none !important;
             }
 
-            #mobile-nav {
-                position: fixed !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 100vw !important;
-                height: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
-                min-height: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
-                padding: 0 0 env(safe-area-inset-bottom, 0px) 0 !important;
-                margin: 0 !important;
-                display: grid !important;
-                grid-template-columns: 1fr 1fr 88px 1fr 1fr !important;
-                align-items: center !important;
-                justify-items: stretch !important;
-                gap: 0 !important;
-                background: #08112b !important;
-                border: 0 !important;
-                overflow: visible !important;
-                z-index: 100 !important;
-                box-sizing: border-box !important;
+            /* Bottom sheets stay below the status / Dynamic Island area. */
+            dialog {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                top: auto;
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100dvh - 96px);
+                margin: 0;
+                border-radius: 22px 22px 0 0;
+                overflow: hidden;
             }
 
-            #mobile-nav > .mobile-nav-item {
-                width: 100% !important;
-                min-width: 0 !important;
-                max-width: none !important;
-                height: 72px !important;
-                min-height: 72px !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 4px !important;
-                transform: none !important;
-                position: relative !important;
-                overflow: visible !important;
-                white-space: nowrap !important;
-                font-size: 10px !important;
-                line-height: 1.1 !important;
-                color: #64748b !important;
-            }
-
-            #mobile-nav > .mobile-nav-item.active {
-                color: var(--accent) !important;
-            }
-
-            #mobile-nav > .mobile-nav-item:nth-child(1) { grid-column: 1 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(2) { grid-column: 2 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(3) { grid-column: 3 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(4) { grid-column: 4 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(5) { grid-column: 5 !important; }
-
-            #mobile-nav > .mobile-nav-item .material-symbols-rounded {
-                font-size: 23px !important;
-                line-height: 1 !important;
-            }
-
-            #mobile-nav > .mobile-nav-item-fab {
-                width: 88px !important;
-                height: 72px !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                position: relative !important;
-                left: auto !important;
-                top: auto !important;
-                transform: none !important;
-                z-index: 110 !important;
-                overflow: visible !important;
-            }
-
-            #mobile-nav .mobile-nav-fab {
-                width: 64px !important;
-                height: 64px !important;
-                min-width: 64px !important;
-                min-height: 64px !important;
-                margin: 0 auto !important;
-                padding: 0 !important;
-                position: absolute !important;
-                left: 50% !important;
-                top: 0 !important;
-                transform: translate(-50%, -32px) !important;
-                border-radius: 50% !important;
-                border: 4px solid #fff !important;
-                background: #08112b !important;
-                color: #fff !important;
-                box-shadow: 0 10px 24px rgba(0,0,0,.22) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                box-sizing: border-box !important;
-            }
-
-            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
-                font-size: 32px !important;
-                line-height: 1 !important;
-            }
-
-            #view-container {
-                padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
-            }
-
-            /* Mobile dialogs: stay below the status/Dynamic Island area */
-            #newTradeDialog,
-            #editDialog,
-            #closeDialog,
-            #rollDialog,
-            #rollSelectDialog {
-                position: fixed !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                top: auto !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                height: calc(100dvh - 88px) !important;
-                max-height: calc(100dvh - 88px) !important;
-                margin: 0 !important;
-                border-radius: 22px 22px 0 0 !important;
-                overflow: hidden !important;
-            }
-
-            #newTradeDialog[open],
-            #editDialog[open],
-            #closeDialog[open],
-            #rollDialog[open],
-            #rollSelectDialog[open] {
-                display: flex !important;
-            }
-
-            .dialog-header {
-                min-height: 58px !important;
-                padding: 10px 14px !important;
+            dialog[open] {
+                display: flex;
+                animation: slideUpMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             }
 
             .dialog-content {
-                padding: 16px 14px !important;
-                overflow-y: auto !important;
-                min-height: 0 !important;
+                min-height: 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .dialog-footer {
-                min-height: 64px !important;
-                padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
-            }
-        }
-
-
-        /* v17: final mobile nav reset for iPhone portrait; no extra bottom strip, stable after first load */
-        @media (max-width: 768px) {
-            html,
-            body,
-            #app-shell {
-                background: #08112b !important;
-                background-color: #08112b !important;
-            }
-
-            body::after {
-                content: none !important;
-                display: none !important;
-                height: 0 !important;
-            }
-
-            #mobile-nav {
-                position: fixed !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 100% !important;
-                height: 72px !important;
-                min-height: 72px !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: grid !important;
-                grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-                align-items: center !important;
-                justify-items: center !important;
-                gap: 0 !important;
-                background: #08112b !important;
-                border: 0 !important;
-                overflow: visible !important;
-                z-index: 100 !important;
-                box-sizing: border-box !important;
-            }
-
-            #mobile-nav > .mobile-nav-item {
-                width: 100% !important;
-                min-width: 0 !important;
-                max-width: none !important;
-                height: 72px !important;
-                min-height: 72px !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 4px !important;
-                transform: none !important;
-                position: relative !important;
-                overflow: visible !important;
-                white-space: nowrap !important;
-                font-size: 10px !important;
-                line-height: 1.1 !important;
-                color: #64748b !important;
-                box-sizing: border-box !important;
-            }
-
-            #mobile-nav > .mobile-nav-item.active {
-                color: var(--accent) !important;
-            }
-
-            #mobile-nav > .mobile-nav-item:nth-child(1) { grid-column: 1 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(2) { grid-column: 2 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(3) { grid-column: 3 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(4) { grid-column: 4 !important; }
-            #mobile-nav > .mobile-nav-item:nth-child(5) { grid-column: 5 !important; }
-
-            #mobile-nav > .mobile-nav-item .material-symbols-rounded {
-                font-size: 23px !important;
-                line-height: 1 !important;
-            }
-
-            #mobile-nav > .mobile-nav-item-fab {
-                z-index: 120 !important;
-            }
-
-            #mobile-nav .mobile-nav-fab {
-                width: 62px !important;
-                height: 62px !important;
-                min-width: 62px !important;
-                min-height: 62px !important;
-                margin: 0 auto !important;
-                padding: 0 !important;
-                position: relative !important;
-                left: auto !important;
-                top: auto !important;
-                transform: translateY(-18px) !important;
-                border-radius: 50% !important;
-                border: 4px solid #fff !important;
-                background: #08112b !important;
-                color: #fff !important;
-                box-shadow: 0 10px 24px rgba(0,0,0,.22) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                box-sizing: border-box !important;
-            }
-
-            #mobile-nav .mobile-nav-fab .material-symbols-rounded {
-                font-size: 31px !important;
-                line-height: 1 !important;
-            }
-
-            #view-container {
-                padding-bottom: 84px !important;
-            }
-        }
-
-
-        /* v18: neutralize iOS initial bottom safe-area inflation */
-        @media (max-width: 768px) {
-            #mobile-nav {
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-                bottom: calc(-1 * env(safe-area-inset-bottom, 0px)) !important;
-                box-sizing: border-box !important;
-                background: #08112b !important;
-            }
-
-            #mobile-nav > .mobile-nav-item {
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            #view-container {
-                padding-bottom: 84px !important;
-            }
-
-            html,
-            body,
-            #app-shell,
-            #main-area {
-                padding-bottom: 0 !important;
-                margin-bottom: 0 !important;
-            }
-        }
-
-
-        /* v19: stable nav height before/after rotation; raise bar slightly */
-        @media (max-width: 768px) {
-            #mobile-nav {
-                bottom: 10px !important;
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-                padding: 0 !important;
-                background: #08112b !important;
-            }
-
-            #mobile-nav > .mobile-nav-item {
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-            }
-
-            #mobile-nav .mobile-nav-fab {
-                transform: translateY(-18px) !important;
-            }
-
-            #view-container {
-                padding-bottom: 94px !important;
-            }
-
-            html,
-            body,
-            #app-shell,
-            #main-area {
-                background-color: #08112b !important;
-            }
-        }
-
-        /* v20: restore light page background and pin nav to the true bottom */
-        @media (max-width: 768px) {
-            html {
-                background: #08112b !important;
-                background-color: #08112b !important;
-            }
-
-            body,
-            #app-shell,
-            #main-area,
-            #view-container {
-                background: var(--bg) !important;
-                background-color: var(--bg) !important;
-                margin-bottom: 0 !important;
-            }
-
-            #mobile-nav {
-                position: fixed !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 100% !important;
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                background: #08112b !important;
-                background-color: #08112b !important;
-                border: 0 !important;
-                box-sizing: border-box !important;
-                z-index: 100 !important;
-            }
-
-            #mobile-nav > .mobile-nav-item {
-                height: 72px !important;
-                min-height: 72px !important;
-                max-height: 72px !important;
-            }
-
-            #mobile-nav .mobile-nav-fab {
-                transform: translateY(-18px) !important;
-            }
-
-            #view-container {
-                padding-bottom: 84px !important;
-            }
-
-            body::after {
-                content: none !important;
-                display: none !important;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
             }
         }
 
@@ -1766,73 +1481,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    /* ==========================================================================
-       0. 版面刷新與觸控行為強化
-    ========================================================================== */
-    function refreshLayout() {
-        // iOS Safari 初次直向載入時 visualViewport.height 可能暫時偏小，
-        // 會讓整個 App 比實際可視區矮，底部因此露出一塊空白。
-        // 以 innerHeight / documentElement.clientHeight 為主，visualViewport 只作參考，
-        // 並取較大的有效高度，避免初始值把頁面縮短。
-        const vv = window.visualViewport;
-        const innerH = Math.round(window.innerHeight || 0);
-        const clientH = Math.round(document.documentElement.clientHeight || 0);
-        const vvH = vv ? Math.round(vv.height + (vv.offsetTop || 0)) : 0;
-        const h = Math.max(innerH, clientH, vvH);
+    /* Mobile viewport sizing is CSS-only after refactor. */
+    function refreshLayout() {}
+    function refreshLayoutBurst() {}
 
-        if (h > 0) {
-            document.documentElement.style.setProperty('--app-height', `${h}px`);
-        }
-        void document.documentElement.offsetHeight;
-    }
-
-    function refreshLayoutBurst() {
-        refreshLayout();
-        requestAnimationFrame(refreshLayout);
-        setTimeout(refreshLayout, 80);
-        setTimeout(refreshLayout, 250);
-        setTimeout(refreshLayout, 600);
-    }
-
-    refreshLayoutBurst();
-
-    window.addEventListener('resize', refreshLayoutBurst, { passive: true });
-    window.addEventListener('orientationchange', refreshLayoutBurst, { passive: true });
-
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', refreshLayoutBurst, { passive: true });
-        window.visualViewport.addEventListener('scroll', refreshLayout, { passive: true });
-    }
-
-    window.addEventListener('load', refreshLayoutBurst, { passive: true });
-    window.addEventListener('pageshow', refreshLayoutBurst, { passive: true });
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshLayoutBurst(); }, { passive: true });
-    setTimeout(refreshLayoutBurst, 1000);
-
-
-    function stabilizeMobileNav() {
-        const nav = document.getElementById('mobile-nav');
-        if (!nav || window.innerWidth > 768) return;
-        nav.style.setProperty('height', '72px', 'important');
-        nav.style.setProperty('min-height', '72px', 'important');
-        nav.style.setProperty('max-height', '72px', 'important');
-        nav.style.setProperty('padding-bottom', '0px', 'important');
-    }
-
-    function stabilizeMobileNavBurst() {
-        stabilizeMobileNav();
-        requestAnimationFrame(stabilizeMobileNav);
-        setTimeout(stabilizeMobileNav, 80);
-        setTimeout(stabilizeMobileNav, 250);
-        setTimeout(stabilizeMobileNav, 700);
-        setTimeout(stabilizeMobileNav, 1400);
-    }
-
-    stabilizeMobileNavBurst();
-    window.addEventListener('load', stabilizeMobileNavBurst, { passive: true });
-    window.addEventListener('pageshow', stabilizeMobileNavBurst, { passive: true });
-    window.addEventListener('resize', stabilizeMobileNavBurst, { passive: true });
-    window.addEventListener('orientationchange', stabilizeMobileNavBurst, { passive: true });
 
     function detectStandalone() {
         const isStandaloneDisplayMode = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
